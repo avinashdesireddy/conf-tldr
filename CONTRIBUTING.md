@@ -71,9 +71,15 @@ One edition can hold many co-located events. Each talk's summary stays at `event
 
 Talks not in `track_of` appear under **Track not yet assigned**. YouTube does not say which co-located event a talk belongs to, so take the track from the event schedule.
 
-## Status checklist
+## Topics (README list)
 
-`render.py` writes `events/<series>/<edition>/STATUS.md`: every playlist video of 5+ minutes, under **Done** (a `talks/<id>.json` exists) or **To do**. Nothing to edit by hand.
+The README lists, per event, the talks in `data/<series>/<edition>/topics.json`, grouped by topic:
+
+```json
+{"Inference": ["<video_id>", "..."], "Agentic": ["<video_id>"]}
+```
+
+A title links to its summary once `talks/<id>.json` exists; otherwise it is plain text with a YouTube link. Summarized talks not in any topic appear under **Other**. To add a talk or topic, edit `topics.json` and run `render.py`.
 
 ## Slides
 

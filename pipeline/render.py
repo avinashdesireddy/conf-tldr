@@ -5,7 +5,8 @@ from pathlib import Path
 
 import jsonschema
 
-from common import ROOT, event_dir, list_events, load_event, load_projects, load_videos, track_of, youtube_url
+from common import (ROOT, clean_title, event_dir, list_events, load_event, load_projects, load_videos, track_of,
+                    youtube_url)
 
 START, END = "<!-- summaries:start -->", "<!-- summaries:end -->"
 
@@ -82,40 +83,43 @@ def by_track(ev: dict, talks: list[dict]) -> list[tuple[str, list[dict]]]:
 
 
 def render_event_index(ev: dict, talks: list[dict]) -> str:
-    out = [f"# {ev['name']}", "", f"{len(talks)} talks summarized. [Status of all talks](STATUS.md)", ""]
+    out = [f"# {ev['name']}", "", f"{len(talks)} talks summarized.", ""]
     for label, members in by_track(ev, talks):
         out += [f"## {label}", "", *talk_rows(members, ""), ""]
     return "\n".join(out)
 
 
-MIN_DURATION_S = 300
-
-
-def render_status(event: str, ev: dict, talks: list[dict]) -> str:
-    """Checklist of every playlist video of 5+ minutes: done (has a summary) or to do."""
-    done = {d["video_id"] for d in talks}
-    videos = [v for v in load_videos(event).values() if v["video_id"] in done or v["duration_s"] >= MIN_DURATION_S]
-
-    def item(v: dict) -> str:
-        vid = v["video_id"]
-        if vid in done:
-            return f"- [x] {v['title']} · [summary](talks/{vid}.md) · [YouTube]({youtube_url(vid)})"
-        return f"- [ ] {v['title']} · [YouTube]({youtube_url(vid)})"
-
-    todo = [item(v) for v in videos if v["video_id"] not in done]
-    return "\n".join([
-        f"# {ev['name']}: status", "",
-        f"## Done ({len(done)})", "", *[item(v) for v in videos if v["video_id"] in done], "",
-        f"## To do ({len(todo)})", "", *todo, "",
-    ])
+def short_title(playlist_title: str) -> str:
+    """Playlist titles end in ' - Speakers' or '... Speakers' (truncated by YouTube)."""
+    if "..." in playlist_title:
+        return playlist_title.split("...")[0].rstrip(" .:,") + "…"
+    return clean_title(playlist_title)
 
 
 def render_readme_block(events: list[tuple[str, dict, list[dict]]]) -> str:
+    """Per event, the talks listed in topics.json; a title links to its summary once one exists."""
     out = [START, ""]
     for event, ev, talks in events:
-        out += [f"### {ev['name']}", "", f"[Status of all talks](events/{event}/STATUS.md)", ""]
-        for label, members in by_track(ev, talks):
-            out += [f"**{label}**", "", *talk_rows(members, f"events/{event}/"), ""]
+        topics_path = event_dir(event) / "topics.json"
+        topics = json.loads(topics_path.read_text()) if topics_path.exists() else {}
+        summaries = {d["video_id"]: d for d in talks}
+        videos = load_videos(event)
+        listed = {vid for ids in topics.values() for vid in ids}
+        other = [vid for vid in summaries if vid not in listed]
+        if other:
+            topics = {**topics, "Other": other}
+
+        out += [f"### {ev['name']}", ""]
+        for topic, ids in topics.items():
+            n = sum(1 for v in ids if v in summaries)
+            out += [f"#### {topic} ({n}/{len(ids)} summarized)", "", "| Talk | Video |", "|---|---|"]
+            for vid in ids:
+                if vid in summaries:
+                    talk = f"[{summaries[vid]['title']}](events/{event}/talks/{vid}.md)"
+                else:
+                    talk = short_title(videos[vid]["title"])
+                out.append(f"| {talk} | [YouTube]({youtube_url(vid)}) |")
+            out.append("")
     out.append(END)
     return "\n".join(out)
 
@@ -138,7 +142,6 @@ def main() -> None:
         if not talks:
             continue
         (dest / "README.md").write_text(render_event_index(ev, talks))
-        (dest / "STATUS.md").write_text(render_status(event, ev, talks))
         (event_dir(event) / "talks.jsonl").write_text("".join(json.dumps(d, ensure_ascii=False) + "\n" for d in talks))
         rendered.append((event, ev, talks))
         print(f"{event}: {len(talks)} talks")
