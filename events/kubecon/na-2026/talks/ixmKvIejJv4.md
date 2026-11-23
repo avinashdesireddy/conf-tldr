@@ -1,0 +1,46 @@
+# Cache Me If You Can: LLM Inference with llm-d (with fun drawings)
+
+**Event:** KubeCon + CloudNativeCon North America 2026 · Track not yet assigned  
+**Speakers:** Alexa Griffith (Red Hat)  
+**Video:** [YouTube](https://www.youtube.com/watch?v=ixmKvIejJv4) (25:56)  
+**Slides:** [Find slides on Sched](https://kccncna2026.sched.com/search?q=Cache+Me+If+You+Can%3A+LLM+Inference+with+llm-d+%28with+fun+drawings%29)  
+**Tags:** `ai-inference`, `llm-d`, `flow-control`, `routing`, `getting-started`
+
+> A step-by-step tour of llm-d: how the endpoint picker filters, scores and picks a pod, and where prefix-aware routing, KV offloading and prefill/decode disaggregation fit. Most of the talk is a practical guide to flow control: saturation detectors, fairness policies and priority holdback.
+
+## Key points
+
+- Once one model server fills up, adding replicas needs smarter routing than round robin, or you keep recomputing cache. [1:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=60s)
+- The gateway asks llm-d's endpoint picker (EPP) which pod in an InferencePool to use; the key resources are the EPP, InferenceObjective, InferencePool, Gateway and HTTPRoute. [3:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=180s)
+- The EPP filters, scores, then picks. It estimates which prefixes each pod holds from the requests it sent; it does not read pod caches. [4:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=240s)
+- Prefix affinity can pile traffic onto one hot pod; adding a load score trades cache hits against queue time. [7:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=420s)
+- KV offload to CPU keeps long agentic sessions reusable; prefill/decode disaggregation separates bursty prefill from steady decode. [8:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=480s)
+- Batch inference runs through an OpenAI-compatible batch gateway and an async processor that dispatches when there is room. [11:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=660s)
+- Flow control: priority bands hold per-tenant queues, and it only gates when the pool is saturated. Fairness policies include global strict (oldest first), round robin, and least-served first. [13:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=780s)
+- Saturation detectors can count requests or tokens, read engine utilization (which lags), or combine both; gate too early and you lose throughput, too late and GPUs oversaturate. [15:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=900s)
+- Priority holdback stops batch from being admitted above a pool saturation threshold, so real-time latency stays as if batch were not there. [18:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=1080s)
+- Other levers: SLO-based ordering, headroom, quota-based priority, and evicting batch work back to the queue for retry. [20:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=1200s)
+- Tune by symptom, one knob at a time, and check llm-d's prefix guesses against vLLM's own metrics. [23:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=1380s)
+
+## Numbers stated
+
+- Priority holdback example: batch held back when total pool saturation is above 0.6, tested on H100. [19:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=1140s)
+
+## Open gaps
+
+- Output-token estimation is off by default and needs extra infrastructure; request-count detectors break down when request sizes vary widely. [15:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=900s)
+- Utilization-based detection lags and can over-admit. [16:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=960s)
+- There are many knobs and little tooling to see their effect; the speaker built a replay visualizer and interactive explainer and hopes to contribute them. [24:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=1440s)
+
+## Opportunities
+
+| Type | Opportunity | At |
+|---|---|---|
+| build | Mix batch and real-time traffic on one pool, turn on priority holdback, and measure real-time P95. | [18:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=1080s) |
+| contribute | Help bring the interactive explainer or run-replay visualizer into the llm-d docs. | [24:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=1440s) |
+| write | A guide to choosing a saturation detector for a given traffic shape. | [15:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=900s) |
+| learn | Use this talk as a walkthrough while deploying llm-d's well-lit paths. | [6:00](https://www.youtube.com/watch?v=ixmKvIejJv4&t=360s) |
+
+## Projects mentioned
+
+[llm-d](https://github.com/llm-d/llm-d), [vLLM](https://github.com/vllm-project/vllm), [KServe](https://github.com/kserve/kserve), [Gateway API](https://github.com/kubernetes-sigs/gateway-api), [Gateway API Inference Extension](https://github.com/kubernetes-sigs/gateway-api-inference-extension)
