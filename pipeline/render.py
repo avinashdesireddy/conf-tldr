@@ -88,36 +88,26 @@ def render_event_index(ev: dict, talks: list[dict]) -> str:
     return "\n".join(out)
 
 
+MIN_DURATION_S = 300
+
+
 def render_status(event: str, ev: dict, talks: list[dict]) -> str:
-    """Every video in the playlists, bucketed by summarized / queued / not reviewed / skipped."""
-    bl_path = event_dir(event) / "backlog.json"
-    bl = json.loads(bl_path.read_text()) if bl_path.exists() else {}
-    queue, skip, min_s = bl.get("queue", []), set(bl.get("skip", [])), bl.get("min_duration_s", 0)
+    """Checklist of every playlist video of 5+ minutes: done (has a summary) or to do."""
     done = {d["video_id"] for d in talks}
-    videos = load_videos(event)
+    videos = [v for v in load_videos(event).values() if v["video_id"] in done or v["duration_s"] >= MIN_DURATION_S]
 
-    def row(vid: str, summary: bool = False) -> str:
-        v = videos[vid]
-        title = f"[{v['title']}](talks/{vid}.md)" if summary else v["title"]
-        return f"| {title} | {v['duration_s'] // 60}m | [YouTube]({youtube_url(vid)}) |"
+    def item(v: dict) -> str:
+        vid = v["video_id"]
+        if vid in done:
+            return f"- [x] {v['title']} · [summary](talks/{vid}.md) · [YouTube]({youtube_url(vid)})"
+        return f"- [ ] {v['title']} · [YouTube]({youtube_url(vid)})"
 
-    head = ["| Talk | Length | Video |", "|---|---|---|"]
-    queued = [v for v in queue if v in videos and v not in done]
-    rest = [v for v in videos if v not in done and v not in queued and v not in skip and videos[v]["duration_s"] >= min_s]
-    skipped = [v for v in videos if v not in done and v not in queued and (v in skip or videos[v]["duration_s"] < min_s)]
-
-    sections = [
-        (f"Summarized ({len(done)})", [row(v, True) for v in videos if v in done]),
-        (f"Queued ({len(queued)})", [row(v) for v in queued]),
-        (f"Not reviewed ({len(rest)})", [row(v) for v in rest]),
-        (f"Skipped ({len(skipped)})", [row(v) for v in skipped]),
-    ]
-    out = [f"# {ev['name']}: status", "",
-           f"{len(videos)} videos. Edit `data/{event}/backlog.json` to queue or skip talks; "
-           f"videos under {min_s // 60} min are skipped.", ""]
-    for title, rows in sections:
-        out += [f"## {title}", ""] + (head + rows if rows else ["None."]) + [""]
-    return "\n".join(out)
+    todo = [item(v) for v in videos if v["video_id"] not in done]
+    return "\n".join([
+        f"# {ev['name']}: status", "",
+        f"## Done ({len(done)})", "", *[item(v) for v in videos if v["video_id"] in done], "",
+        f"## To do ({len(todo)})", "", *todo, "",
+    ])
 
 
 def render_readme_block(events: list[tuple[str, dict, list[dict]]]) -> str:
