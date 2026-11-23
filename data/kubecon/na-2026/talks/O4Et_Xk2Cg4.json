@@ -1,0 +1,134 @@
+{
+  "video_id": "O4Et_Xk2Cg4",
+  "event": "kubecon/na-2026",
+  "title": "llm-d 1.0 Production-Grade Inference for Cloud-Native AI",
+  "speakers": [
+    {
+      "name": "Carlos Costa",
+      "org": "IBM Research"
+    },
+    {
+      "name": "Robert Shaw"
+    }
+  ],
+  "duration_s": 1277,
+  "youtube_url": "https://www.youtube.com/watch?v=O4Et_Xk2Cg4",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=llm-d+1.0+Production-Grade+Inference+for+Cloud-Native+AI"
+  },
+  "tags": [
+    "ai-inference",
+    "llm-d",
+    "flow-control",
+    "multi-tenancy",
+    "open-weights"
+  ],
+  "tldr": "llm-d 1.0 marks the core stack as production-ready: KV-aware routing, prefill/decode disaggregation, KV offloading and flow control, behind a stable v1 API. IBM ran it on 500+ H100s for an internal agentic workload, and a demo shows throughput nearly doubling on the same hardware.",
+  "key_points": [
+    {
+      "text": "Open-weight models now close much of the gap with frontier models, so enterprises want to self-host for cost and data control.",
+      "t": 0
+    },
+    {
+      "text": "Scaling inference is an orchestration problem: route on KV reuse and load, schedule multi-pod replicas as gangs, and manage KV state across memory tiers.",
+      "t": 60
+    },
+    {
+      "text": "llm-d builds on Kubernetes standards: the Gateway API inference extension for the router, LeaderWorkerSet for MoE and gang scheduling, DisaggregatedSet for prefill/decode, and native KV offloading.",
+      "t": 180
+    },
+    {
+      "text": "It now also supports batch and async APIs.",
+      "t": 240
+    },
+    {
+      "text": "Design stays modular (use only what you need) and vendor-neutral, with more than eight accelerator types supported.",
+      "t": 300
+    },
+    {
+      "text": "'Well-lit paths' are deployable blueprints with benchmark data: intelligent scheduling, KV cache management, flow control, and now agentic serving.",
+      "t": 360
+    },
+    {
+      "text": "1.0 adds multi-tenant QoS (priority and fairness via flow control), router high availability, coordinated prefill/decode rollouts, session and turn affinity for agents, and a stable v1 API.",
+      "t": 840
+    },
+    {
+      "text": "Demo: with plain round robin the KV cache hit rate is low and uneven; turning on the llm-d router raises it to about 75% and nearly doubles throughput; flow control then gives paying tiers lower latency while free users still get served.",
+      "t": 1020
+    }
+  ],
+  "numbers": [
+    {
+      "text": "A new open-weight model drops about every 11 days.",
+      "t": 0
+    },
+    {
+      "text": "Tesla saw 3x more throughput with KV-aware routing.",
+      "t": 480
+    },
+    {
+      "text": "Over 500 contributors and more than 25 contributing companies.",
+      "t": 480
+    },
+    {
+      "text": "IBM: 500+ H100 GPUs serving a large MoE model with expert parallelism of 32+, peaking at 3,000 concurrent agents and about 6 million tokens a minute (6x what the workload needed).",
+      "t": 600
+    },
+    {
+      "text": "Demo: 1,000 agents on 25 Kubernetes nodes across 40 sandboxes, about 300 requests a second.",
+      "t": 960
+    },
+    {
+      "text": "KV cache hit rate rose from a 30-50% swing to about 75% with the llm-d router.",
+      "t": 1080
+    }
+  ],
+  "projects": [
+    "llm-d",
+    "vLLM",
+    "SGLang",
+    "Gateway API Inference Extension",
+    "LeaderWorkerSet",
+    "Agent Sandbox"
+  ],
+  "open_gaps": [
+    {
+      "text": "Going from a model recipe to a shared service (rollouts, downtime, competing teams) is still the hard part.",
+      "t": 60
+    },
+    {
+      "text": "Tuning still takes a lot of expertise; the roadmap names operational intelligence, more automation and better guides.",
+      "t": 1200
+    },
+    {
+      "text": "Agent infrastructure (sandboxes, agent-substrate) and inference infrastructure are not yet woven together for fully self-hosted stacks.",
+      "t": 1140
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Reproduce the round robin vs llm-d router vs flow control comparison on your own cluster and publish the numbers.",
+      "t": 1020
+    },
+    {
+      "type": "contribute",
+      "text": "Run a well-lit path on hardware or a model it has not been tested on and report how it breaks, as the speakers ask.",
+      "t": 1200
+    },
+    {
+      "type": "write",
+      "text": "Case study: serving a large MoE model on previous-generation GPUs instead of paying a commercial API bill.",
+      "t": 600
+    },
+    {
+      "type": "learn",
+      "text": "Read through llm-d's well-lit paths as the shortest route to a tuned deployment.",
+      "t": 360
+    }
+  ],
+  "generated_by": "claude-opus-5-5 (agent-written in session, not the Bedrock pipeline)",
+  "prompt_version": "extract-v1"
+}
