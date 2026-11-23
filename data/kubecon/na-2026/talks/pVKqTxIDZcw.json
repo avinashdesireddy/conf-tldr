@@ -1,0 +1,128 @@
+{
+  "video_id": "pVKqTxIDZcw",
+  "event": "kubecon/na-2026",
+  "title": "DisaggregatedSet Meets Multi-EPP: Coordinating llm-d at Scale in production",
+  "speakers": [
+    {
+      "name": "Mathis Felardos",
+      "org": "Mistral AI"
+    },
+    {
+      "name": "Lucas Fernandes Martins",
+      "org": "Mistral AI"
+    }
+  ],
+  "duration_s": 978,
+  "youtube_url": "https://www.youtube.com/watch?v=pVKqTxIDZcw",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=DisaggregatedSet+Meets+Multi-EPP%3A+Coordinating+llm-d+at+Scale+in+production"
+  },
+  "tags": [
+    "ai-inference",
+    "llm-d",
+    "disaggregated-serving",
+    "high-availability",
+    "production"
+  ],
+  "tldr": "Mistral runs llm-d in production and contributed two pieces back: DisaggregatedSet, which manages prefill and decode as one unit inside LeaderWorkerSet, and a cross-replica syncer that lets several endpoint pickers share state so routing scales out.",
+  "key_points": [
+    {
+      "text": "Disaggregated serving splits compute-bound prefill from memory-bound decode for better service on the same GPUs, but it is hard to operate: rollouts can pair incompatible peers and break the prefill/decode ratio.",
+      "t": 60
+    },
+    {
+      "text": "LeaderWorkerSet treats a multi-pod replica as one unit (if one pod dies, the group dies) and now supports gang scheduling.",
+      "t": 120
+    },
+    {
+      "text": "DisaggregatedSet, now part of the LeaderWorkerSet project, declares prefill, decode (and encode) roles with topology-aware placement on NVL72 slices, coordinated progressive rollouts that hold the ratio, and per-role autoscaling.",
+      "t": 180
+    },
+    {
+      "text": "Cross-revision gating: llm-d shifts traffic to a new revision gradually, only once compatible prefill and decode pods exist.",
+      "t": 360
+    },
+    {
+      "text": "DisaggregatedSet has been a well-lit path since llm-d v1.",
+      "t": 420
+    },
+    {
+      "text": "By default the EPP is active-passive: failover means downtime (fail closed) or poor routing (fail open), and the only way to grow is vertically.",
+      "t": 480
+    },
+    {
+      "text": "Several EPPs without coordination drift apart, each seeing only part of the in-flight load.",
+      "t": 540
+    },
+    {
+      "text": "The cross-replica syncer is a generic set/get interface; a plugin opts in with about 20 lines of Go by giving the state to sync and an aggregate function.",
+      "t": 600
+    },
+    {
+      "text": "Mistral's Redis syncer runs every 50 ms in the background, so the request hot path never waits on Redis.",
+      "t": 720
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Rollouts happen several times a week.",
+      "t": 360
+    },
+    {
+      "text": "At 300 RPS, three synced EPPs matched the cache hit rate of a single EPP with precise KV-aware routing.",
+      "t": 780
+    },
+    {
+      "text": "Over 90% of measurements showed zero discrepancy between local and synced state at both 200 and 800 RPS.",
+      "t": 840
+    },
+    {
+      "text": "One EPP broke down around 700 RPS; three synced EPPs kept serving.",
+      "t": 840
+    }
+  ],
+  "projects": [
+    "llm-d",
+    "LeaderWorkerSet",
+    "Redis"
+  ],
+  "open_gaps": [
+    {
+      "text": "Safer scale-up during rollouts is still landing (planned for DisaggregatedSet v1.1).",
+      "t": 300
+    },
+    {
+      "text": "Redis transaction overhead grows with endpoints; a batched-set contribution is in review.",
+      "t": 900
+    },
+    {
+      "text": "A peer-to-peer syncer that removes Redis entirely is in progress.",
+      "t": 900
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "contribute",
+      "text": "Implement another cross-replica syncer backend, or help with the peer-to-peer one.",
+      "t": 900
+    },
+    {
+      "type": "build",
+      "text": "Run active-active EPPs with the Redis syncer and load-test past the ~700 RPS single-EPP limit.",
+      "t": 840
+    },
+    {
+      "type": "learn",
+      "text": "Try DisaggregatedSet for prefill/decode rollouts instead of hand-managing two Deployments.",
+      "t": 180
+    },
+    {
+      "type": "write",
+      "text": "Explain why an active-passive router caps inference scale, using Mistral's numbers.",
+      "t": 480
+    }
+  ],
+  "generated_by": "claude-opus-5-5 (agent-written in session, not the Bedrock pipeline)",
+  "prompt_version": "extract-v1"
+}
