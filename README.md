@@ -8,7 +8,7 @@ Short, timestamp-linked summaries of conference talks. Each one has key points, 
 
 ### KubeCon + CloudNativeCon North America 2026
 
-#### Inference (6/20 summarized)
+#### Inference (7/20 summarized)
 
 | Talk | Video |
 |---|---|
@@ -17,7 +17,7 @@ Short, timestamp-linked summaries of conference talks. Each one has key points, 
 | [llm-d 1.0 Production-Grade Inference for Cloud-Native AI](events/kubecon/na-2026/talks/O4Et_Xk2Cg4.md) | [YouTube](https://www.youtube.com/watch?v=O4Et_Xk2Cg4) |
 | [Cache Me If You Can: LLM Inference with llm-d (with fun drawings)](events/kubecon/na-2026/talks/ixmKvIejJv4.md) | [YouTube](https://www.youtube.com/watch?v=ixmKvIejJv4) |
 | [DisaggregatedSet Meets Multi-EPP: Coordinating llm-d at Scale in production](events/kubecon/na-2026/talks/pVKqTxIDZcw.md) | [YouTube](https://www.youtube.com/watch?v=pVKqTxIDZcw) |
-| Inside the Inference Load Balancer: Proxy/Controller Patterns for… | [YouTube](https://www.youtube.com/watch?v=wNJVJ8PhFO0) |
+| [Inside the Inference Load Balancer: Proxy/Controller Patterns for LLM Serving on Kubernetes](events/kubecon/na-2026/talks/wNJVJ8PhFO0.md) | [YouTube](https://www.youtube.com/watch?v=wNJVJ8PhFO0) |
 | [Composing Inference on Kubernetes: Gateway, Schedule, Serve, Observe](events/kubecon/na-2026/talks/02tyAmdoleQ.md) | [YouTube](https://www.youtube.com/watch?v=02tyAmdoleQ) |
 | New Traffic, New Rules: Standardizing AI-Aware… | [YouTube](https://www.youtube.com/watch?v=kwJTUGK4FPM) |
 | AI Gateways in Practice: Model Routing, Inference Scheduling, and MCP… | [YouTube](https://www.youtube.com/watch?v=SerQWvNyI0M) |
