@@ -8,6 +8,8 @@ Short, timestamp-linked summaries of conference talks. Each one has key points, 
 
 ### KubeCon + CloudNativeCon North America 2026
 
+[Status of all talks](events/kubecon/na-2026/STATUS.md)
+
 **Track not yet assigned**
 
 | Talk | Speakers | Video | Slides |

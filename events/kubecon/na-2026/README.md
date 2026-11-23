@@ -1,6 +1,6 @@
 # KubeCon + CloudNativeCon North America 2026
 
-3 talks summarized.
+3 talks summarized. [Status of all talks](STATUS.md)
 
 ## Track not yet assigned
 

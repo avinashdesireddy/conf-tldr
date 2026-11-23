@@ -71,6 +71,16 @@ One edition can hold many co-located events. Each talk's summary stays at `event
 
 Talks not in `track_of` appear under **Track not yet assigned**. YouTube does not say which co-located event a talk belongs to, so take the track from the event schedule.
 
+## Backlog
+
+`events/<series>/<edition>/STATUS.md` lists every video in the playlists under Summarized, Queued, Not reviewed or Skipped. It is generated from `data/<series>/<edition>/backlog.json`:
+
+```json
+{"queue": ["<video_id>", "..."], "skip": ["<video_id>"], "min_duration_s": 300}
+```
+
+A talk moves to Summarized once `talks/<id>.json` exists. Videos shorter than `min_duration_s` are skipped.
+
 ## Slides
 
 Sched blocks scripted access, so `extract.py` writes a Sched search link (`"status": "search"`). To add a direct link, edit the talk JSON:
