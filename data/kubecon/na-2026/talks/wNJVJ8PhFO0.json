@@ -1,0 +1,122 @@
+{
+  "video_id": "wNJVJ8PhFO0",
+  "event": "kubecon/na-2026",
+  "title": "Inside the Inference Load Balancer: Proxy/Controller Patterns for LLM Serving on Kubernetes",
+  "speakers": [
+    {
+      "name": "Qianru Lao",
+      "org": "OpenAI"
+    },
+    {
+      "name": "Lu Zhang",
+      "org": "OpenAI"
+    }
+  ],
+  "duration_s": 1879,
+  "youtube_url": "https://www.youtube.com/watch?v=wNJVJ8PhFO0",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Inside+the+Inference+Load+Balancer%3A+Proxy%2FController+Patterns+for+LLM+Serving+on+Kubernetes"
+  },
+  "tags": [
+    "ai-inference",
+    "routing",
+    "multi-cluster",
+    "load-balancing",
+    "production"
+  ],
+  "tldr": "OpenAI's inference load balancer picks a GPU engine for every request across clusters and regions. A global control plane computes routing weights from demand, capacity and latency profiles; fast local data planes apply them, with penalties, retry caps and load shedding for protection.",
+  "key_points": [
+    {
+      "text": "The load balancer runs in CPU front-end clusters and proxies requests to inference engines in GPU clusters; both sides run on Kubernetes.",
+      "t": 120
+    },
+    {
+      "text": "The least-busy engine is not always fastest: one that already caches the conversation reaches the first token sooner. Signals are TTFT, time between output tokens, load, errors, network latency and cache affinity.",
+      "t": 240
+    },
+    {
+      "text": "The balancer itself is plain Kubernetes: Deployments, HPA on CPU and custom metrics, readiness probes, and GPU cluster locations from a ConfigMap.",
+      "t": 300
+    },
+    {
+      "text": "Early design: filter eligible engines (capabilities, data location), then weighted consistent hashing, with weights nudged by a proportional feedback loop.",
+      "t": 360
+    },
+    {
+      "text": "That design was hard to explain, unbalanced across GPU generations, and weight shifts broke cache affinity, causing oscillation.",
+      "t": 540
+    },
+    {
+      "text": "Current design copies Kubernetes' control/data plane split (like kube-proxy and EndpointSlices): each data plane routes from locally cached weights, never calling the control plane per request.",
+      "t": 720
+    },
+    {
+      "text": "Nearest-engine routing fails because demand and GPU capacity are not balanced by region; a farther engine can win end to end.",
+      "t": 1020
+    },
+    {
+      "text": "The optimizer takes per-cluster demand, network latency, engine capacity and health, and latency-vs-load profiles, and minimizes expected end-to-end latency subject to capacity limits.",
+      "t": 1080
+    },
+    {
+      "text": "Protection: outlier penalties, bounded retries (retries are costly because the new engine lacks the cache), and load shedding as a last resort.",
+      "t": 1260
+    },
+    {
+      "text": "Q&A: spiky API traffic uses other algorithms, more headroom and wider destination pools; uncached tokens are the work measure; each model version is routed as its own model.",
+      "t": 1560
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Optimized routing weights cut network overhead by about 40%.",
+      "t": 1200
+    },
+    {
+      "text": "Example: a cluster sending 120 RPS to a 100 RPS engine nearby, while another region uses only 40 of 80 RPS.",
+      "t": 1020
+    }
+  ],
+  "projects": [
+    "Kubernetes"
+  ],
+  "open_gaps": [
+    {
+      "text": "Bursty API traffic against lagging state can still overload a few engines.",
+      "t": 1500
+    },
+    {
+      "text": "Retry caps that suit normal load can be too high during fleet-wide overload.",
+      "t": 1320
+    },
+    {
+      "text": "Persistent engine faults still need manual investigation and vendor follow-up.",
+      "t": 1260
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "write",
+      "text": "Compare this control/data plane design with llm-d's endpoint picker and Gateway API inference routing.",
+      "t": 720
+    },
+    {
+      "type": "build",
+      "text": "Prototype a global routing-weight optimizer for multi-region inference, with latency-vs-load profiles per engine.",
+      "t": 1080
+    },
+    {
+      "type": "build",
+      "text": "Add cache-aware retry budgets and load shedding to your inference gateway.",
+      "t": 1320
+    },
+    {
+      "type": "learn",
+      "text": "Proportional and PID control, and why mixing many signals into one weight oscillates.",
+      "t": 420
+    }
+  ],
+  "generated_by": "claude-opus-5-5 (agent-written in session, not the Bedrock pipeline)",
+  "prompt_version": "extract-v1"
+}
