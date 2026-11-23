@@ -54,7 +54,6 @@ def main() -> None:
         text = resp["output"]["message"]["content"][0]["text"]
         talk = json.loads(re.search(r"\{.*\}", text, re.S).group(0))
         talk.update(meta)
-        talk["generated_by"] = MODEL_ID
         talk["prompt_version"] = PROMPT_VERSION
         jsonschema.validate(talk, schema)
         (out_dir / f"{vid}.json").write_text(json.dumps(talk, indent=2, ensure_ascii=False) + "\n")

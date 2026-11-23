@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Talk insight",
   "type": "object",
-  "required": ["video_id", "event", "title", "speakers", "youtube_url", "slides", "tldr", "key_points", "projects", "open_gaps", "opportunities", "generated_by"],
+  "required": ["video_id", "event", "title", "speakers", "youtube_url", "slides", "tldr", "key_points", "projects", "open_gaps", "opportunities"],
   "properties": {
     "video_id": {"type": "string"},
     "event": {"type": "string"},
@@ -36,7 +36,6 @@
         }
       }
     },
-    "generated_by": {"type": "string"},
     "prompt_version": {"type": "string"}
   },
   "$defs": {

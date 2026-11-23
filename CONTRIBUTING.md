@@ -97,6 +97,15 @@ The **Projects mentioned** list links any name that matches a key in `data/proje
 
 Bump the version comment in `prompts/extract.md` and `PROMPT_VERSION` in `pipeline/extract.py` together. Each talk JSON records the `prompt_version` it was made with.
 
-## Fixing a summary
+## Pull requests
 
-Edit `data/<series>/<edition>/talks/<id>.json`, run `render.py`, and open a PR. Every point needs a `t` (seconds into the video) that points to where it is said.
+One talk per PR. Commit only that talk's two files:
+
+```
+data/<series>/<edition>/talks/<id>.json
+events/<series>/<edition>/talks/<id>.md
+```
+
+Do not commit `README.md`, `talks.jsonl` or `events/<series>/<edition>/README.md` in a talk PR; every talk changes them, so parallel PRs would conflict. The `render` workflow validates the PR and, after merge, re-renders those files on `main`.
+
+To fix a summary, edit its JSON, run `render.py`, and open a PR the same way. Every point needs a `t` (seconds into the video) that points to where it is said.
