@@ -1,0 +1,135 @@
+{
+  "video_id": "qGvckRV9AwU",
+  "event": "kubecon/na-2026",
+  "title": "Why Are You Still Wasting Whole GPUs? Hardware-Level Sharing, Scheduled with DRA",
+  "speakers": [
+    {
+      "name": "Engin Diri",
+      "org": "Pulumi"
+    }
+  ],
+  "duration_s": 1812,
+  "youtube_url": "https://www.youtube.com/watch?v=qGvckRV9AwU",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Why+Are+You+Still+Wasting+Whole+GPUs%3F+Hardware-Level+Sharing%2C+Scheduled+with+DRA"
+  },
+  "tags": [
+    "gpu-sharing",
+    "dra",
+    "mig",
+    "ai-inference",
+    "platform-engineering"
+  ],
+  "tldr": "A Pulumi solutions architect describes building a self-hosted inference platform for a European customer that splits GPUs into NVIDIA MIG slices and schedules them with Dynamic Resource Allocation (DRA). MIG gives the isolation time-slicing lacks, and DRA lets workloads ask for slices by attributes, but quotas, large models and chargeback remain open.",
+  "key_points": [
+    {
+      "text": "European customers want to self-host models for control and regulation; the speaker's view is that owning the model is easy and using the GPU well is hard.",
+      "t": 360
+    },
+    {
+      "text": "Option one, one whole GPU per pod via the device plugin with vLLM, showed low utilization in Prometheus while the full card was paid for.",
+      "t": 420
+    },
+    {
+      "text": "Option two, time-slicing, has no memory or fault isolation, so noisy neighbors hurt workloads; MPS has the same issue.",
+      "t": 480
+    },
+    {
+      "text": "MIG gives slices with dedicated memory and cache and fault isolation between them; the number of slices depends on the card.",
+      "t": 600
+    },
+    {
+      "text": "DRA mirrors the storage pattern (DeviceClass like StorageClass, claims like PVCs) and selects devices by attributes with CEL.",
+      "t": 720
+    },
+    {
+      "text": "A shared ResourceClaim lets pods in a namespace share a device; a ResourceClaimTemplate gives each pod its own device matching a CEL selector.",
+      "t": 780
+    },
+    {
+      "text": "The stack uses the NVIDIA DRA driver, which publishes MIG profiles as ResourceSlices, plus the Gateway API inference extension and agentgateway, which route by backend load instead of kube-proxy's blind balancing.",
+      "t": 960
+    },
+    {
+      "text": "Demo on an AWS RTX instance: 1g, 2g and 4g MIG profiles exposed as slices; a Qwen3 server and a training pod each got their own slice, queried through an OpenAI-compatible endpoint.",
+      "t": 1320
+    },
+    {
+      "text": "Rule of thumb: MIG for multiple tenants on one card, latency targets, or training and serving together; time-slicing is still fine for one trusted team, dev boxes and bursty jobs.",
+      "t": 1620
+    },
+    {
+      "text": "Rollout lessons: pick slice layouts per node pool, label pools with the MIG config, name slices clearly, and start DRA only after MIG is configured to avoid race conditions.",
+      "t": 1620
+    },
+    {
+      "text": "Guardrails at two points: policy as code in Pulumi before apply, and the same policy in Kyverno at the API server.",
+      "t": 1680
+    }
+  ],
+  "numbers": [
+    {
+      "text": "MIG slice counts cited: seven on larger data-center cards, four on the RTX card used in the demo.",
+      "t": 660
+    },
+    {
+      "text": "A consumer RTX gaming GPU was quoted at about 9,000 euros.",
+      "t": 540
+    }
+  ],
+  "projects": [
+    "Kubernetes",
+    "Dynamic Resource Allocation (DRA)",
+    "NVIDIA DRA Driver for GPUs",
+    "vLLM",
+    "llm-d",
+    "Gateway API",
+    "Gateway API Inference Extension",
+    "agentgateway",
+    "Prometheus",
+    "Kyverno",
+    "Pulumi",
+    "Backstage",
+    "Kueue",
+    "LeaderWorkerSet",
+    "NVIDIA Grove"
+  ],
+  "open_gaps": [
+    {
+      "text": "Day-two questions are still open: MIG quota and ordering (a queue such as Kueue), group-shared claims in 1.37, admission policies, and llm-d as the next layer.",
+      "t": 1440
+    },
+    {
+      "text": "Models larger than a slice or a node need multi-node serving (LeaderWorkerSet is being evaluated); MoE models with prefill and decode pools still need investigation.",
+      "t": 1500
+    },
+    {
+      "text": "Chargeback to teams by slice-hours is the next big step and not yet built.",
+      "t": 1680
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Recreate the stack on one MIG-capable node: GPU driver, DRA driver, MIG profiles, and two workloads on separate slices behind an inference gateway.",
+      "t": 1260
+    },
+    {
+      "type": "build",
+      "text": "Build slice-hour chargeback for MIG slices allocated through DRA.",
+      "t": 1680
+    },
+    {
+      "type": "write",
+      "text": "Write a decision guide for MIG vs time-slicing vs MPS based on tenancy, isolation and burstiness.",
+      "t": 1620
+    },
+    {
+      "type": "learn",
+      "text": "Enforce GPU request policies both in CI and at the API server with Kyverno, so direct API access cannot bypass them.",
+      "t": 1740
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

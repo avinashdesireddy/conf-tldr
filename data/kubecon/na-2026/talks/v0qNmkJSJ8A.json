@@ -1,0 +1,148 @@
+{
+  "video_id": "v0qNmkJSJ8A",
+  "event": "kubecon/na-2026",
+  "title": "Clueless About The Cost of AI Model Usage? OpenCost+llm-d = first of a kind inference cost tracking",
+  "speakers": [
+    {
+      "name": "Alexander Meijer",
+      "org": "IBM"
+    },
+    {
+      "name": "Sima Nadler",
+      "org": "IBM"
+    }
+  ],
+  "duration_s": 1808,
+  "youtube_url": "https://www.youtube.com/watch?v=v0qNmkJSJ8A",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Clueless+About+The+Cost+of+AI+Model+Usage%3F+OpenCost%2Bllm-d+%3D+first+of+a+kind+inference+cost+tracking"
+  },
+  "tags": [
+    "ai-inference",
+    "cost",
+    "finops",
+    "llm-d",
+    "gpu-utilization"
+  ],
+  "tldr": "OpenCost now reads llm-d and vLLM token metrics and combines them with provider pricing and DCGM data to report cost per model and per token. A live demo on an IBM research cluster compares allocation and usage cost to expose idle models, and the roadmap targets GPU usage-based allocation, time slicing and richer idle detection.",
+  "key_points": [
+    {
+      "text": "Self-hosted models are generally cheaper than hosted ones, but that only delays the cost problem as self-hosting grows.",
+      "t": 60
+    },
+    {
+      "text": "OpenCost, a CNCF incubating FinOps tool, covers Kubernetes, cloud provider and plugin-based SaaS costs via the FOCUS spec, with Parquet exporters, APIs and a UI.",
+      "t": 120
+    },
+    {
+      "text": "Responsibility split: llm-d handles token counts, routing and scheduling; OpenCost handles pricing, cloud provider connections and metric aggregation, and never runs LLMs.",
+      "t": 360
+    },
+    {
+      "text": "Outputs include dollars per token and hardware utilization, aimed at cost-aware model routing and comparing self-hosting with hosted APIs.",
+      "t": 420
+    },
+    {
+      "text": "Allocation cost is the max of request and usage, a production metric that rewards right-sizing; usage cost charges only measured use, an R&D metric that tolerates over-requesting.",
+      "t": 720
+    },
+    {
+      "text": "Input versus output cost is split using vLLM prefill time versus decode time.",
+      "t": 1140
+    },
+    {
+      "text": "Demo: the inference-cost totals API aggregated by model and namespace showed a large gap between allocation and usage cost for one model, marking it for right-sizing or more traffic.",
+      "t": 1200
+    },
+    {
+      "text": "Per-model idle cost is derived from two OpenCost API calls, one sharing idle and shared costs and one keeping them separate, then subtracting.",
+      "t": 1380
+    },
+    {
+      "text": "Dashboard widgets show cost per million tokens and the most idle and most expensive idle models; many models had no tokens, like abandoned container workloads.",
+      "t": 1500
+    }
+  ],
+  "numbers": [
+    {
+      "text": "OpenCost launched in 2019 and has about 7,000 GitHub stars.",
+      "t": 120
+    },
+    {
+      "text": "A CNCF survey found 66% of AI workloads run on Kubernetes.",
+      "t": 240
+    },
+    {
+      "text": "Worked example: $1 per vCPU-hour, $10 per GPU-hour, $15 total over 150 tokens gives 10 cents per token.",
+      "t": 960
+    },
+    {
+      "text": "Demo cluster: several dozen llm-d deployments on a few dozen H100 nodes.",
+      "t": 1020
+    },
+    {
+      "text": "One 120B model over 24 hours: $246 allocation cost ($239 input, $7 output) versus about $22 usage cost.",
+      "t": 1140
+    },
+    {
+      "text": "That model was idle 90% of the time.",
+      "t": 1200
+    },
+    {
+      "text": "The most efficient models were only 39% idle; one idle model cost almost $24K over a week.",
+      "t": 1620
+    }
+  ],
+  "projects": [
+    "OpenCost",
+    "llm-d",
+    "vLLM",
+    "SGLang",
+    "Prometheus",
+    "Kubernetes",
+    "NVIDIA DCGM",
+    "FOCUS"
+  ],
+  "open_gaps": [
+    {
+      "text": "GPU allocation uses only resource requests; usage metrics still need to be folded in, and GPU time slicing is not supported yet.",
+      "t": 1680
+    },
+    {
+      "text": "Idle detection relies on a single DCGM metric; memory, PCIe and other GPU dimensions are needed to judge fit and right-sizing.",
+      "t": 1680
+    },
+    {
+      "text": "KV cache settings exist in the API but are not tightly integrated yet.",
+      "t": 1140
+    },
+    {
+      "text": "OpenCost has no native per-model idle view, so it is computed with a two-call workaround.",
+      "t": 1380
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Use allocation-versus-usage cost per model to find idle or abandoned LLM deployments and right-size them.",
+      "t": 1620
+    },
+    {
+      "type": "contribute",
+      "text": "Help OpenCost add GPU time slicing and multi-metric GPU idle detection.",
+      "t": 1680
+    },
+    {
+      "type": "build",
+      "text": "Prototype cost-aware model routing that consumes OpenCost cost-per-token metrics.",
+      "t": 420
+    },
+    {
+      "type": "write",
+      "text": "Compare self-hosted dollars per token from this integration with hosted API pricing for the same workload.",
+      "t": 660
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

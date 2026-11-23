@@ -1,0 +1,146 @@
+{
+  "video_id": "wB5-lqrDCbw",
+  "event": "kubecon/na-2026",
+  "title": "Governing and Scaling Agents in Heterogeneous Environments",
+  "speakers": [
+    {
+      "name": "Antonio Ojea",
+      "org": "Google"
+    },
+    {
+      "name": "Tomás Tormo",
+      "org": "Nearform Ltd"
+    }
+  ],
+  "duration_s": 1893,
+  "youtube_url": "https://www.youtube.com/watch?v=wB5-lqrDCbw",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Governing+and+Scaling+Agents+in+Heterogeneous+Environments"
+  },
+  "tags": [
+    "agent-security",
+    "agent-networking",
+    "zero-trust",
+    "peer-to-peer",
+    "policy"
+  ],
+  "tldr": "Antonio Ojea and Tomás Tormo present Agent Mesh, a network for agents running on Kubernetes, laptops, VMs and serverless, built on a libp2p peer-to-peer data plane with Kademlia discovery. Policy travels with each node as signed, attenuable Biscuit tokens minted at enrollment, and a live hospital demo shows label-based rules keeping EU data in the EU.",
+  "key_points": [
+    {
+      "text": "Regulated customers run agents on laptops, VMs and serverless as well as Kubernetes, and cannot replace existing platforms, so a Kubernetes-only answer creates silos.",
+      "t": 180
+    },
+    {
+      "text": "The solution must run as an SDK, a sidecar or a gateway and work with existing open protocols.",
+      "t": 240
+    },
+    {
+      "text": "A VPN does not fit: it gives L3/L4 connectivity with IPAM pain and no visibility, and a compromised agent gets open access.",
+      "t": 360
+    },
+    {
+      "text": "Agent traffic falls into five kinds: LLM calls, tools over MCP, agent-to-agent (A2A), external apps such as GitHub, and services the agent exposes.",
+      "t": 360
+    },
+    {
+      "text": "Data plane: libp2p over a Kademlia DHT, with a cryptographic identity per node, TLS between nodes and built-in service discovery.",
+      "t": 540
+    },
+    {
+      "text": "Policy: webhooks and Lua/Wasm extensions are opaque and fragile, so they chose Biscuit, signed tokens with a Datalog policy language, exposed to admins through a simpler DSL.",
+      "t": 660
+    },
+    {
+      "text": "The control plane connects to an external identity provider, compiles policy to Datalog and mints a Biscuit at enrollment. Biscuits work offline, so connected nodes no longer need the control plane.",
+      "t": 840
+    },
+    {
+      "text": "Biscuit blocks can only attenuate, so a node can narrow delegated rights, for example to one MCP tool or one HTTP path.",
+      "t": 900
+    },
+    {
+      "text": "Nodes set label requirements for inbound and outbound peers (for example region EU), checked in a five-step exchange before any data flows.",
+      "t": 960
+    },
+    {
+      "text": "Architecture: control plane, admin-run routers that keep the Kademlia network up, and nodes or embedded SDKs; one binary bundles control plane, router and console.",
+      "t": 1080
+    },
+    {
+      "text": "Demo: the US diagnoser is refused by the laptop's EU-only egress rule, and the model cannot override it because the node enforces it; a banned phone is cut off after the control plane notifies peers.",
+      "t": 1380
+    }
+  ],
+  "numbers": [
+    {
+      "text": "A new mesh can be created in about 10 seconds using a tunnel broker.",
+      "t": 1140
+    },
+    {
+      "text": "Five categories of agent traffic: LLM, MCP tools, A2A, external apps, exposed services.",
+      "t": 360
+    },
+    {
+      "text": "A five-step check runs between nodes before any data flows.",
+      "t": 1020
+    },
+    {
+      "text": "Agent Mesh v0.2.0 was just released.",
+      "t": 1800
+    }
+  ],
+  "projects": [
+    "Agent Mesh",
+    "libp2p",
+    "Kademlia",
+    "Biscuit",
+    "CEL",
+    "MCP",
+    "A2A",
+    "Envoy",
+    "Istio",
+    "Kubernetes",
+    "Agent Substrate",
+    "Cloud Run",
+    "Gemini",
+    "Claude"
+  ],
+  "open_gaps": [
+    {
+      "text": "Schema-based filtering of MCP traffic is hard to maintain when there can be millions of tools and fields change often.",
+      "t": 600
+    },
+    {
+      "text": "Region rules depend on admins labeling nodes correctly; the mesh only enforces the labels it is given.",
+      "t": 1020
+    },
+    {
+      "text": "Next: connecting HPC centers and cloud providers to run workflows, with Lawrence Livermore National Lab, and closer work with the A2A protocol.",
+      "t": 1800
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Biscuit tokens: offline verification, Datalog policies and attenuation for delegating narrower rights to sub-agents.",
+      "t": 720
+    },
+    {
+      "type": "build",
+      "text": "Enforce data residency for agent traffic with signed node labels and egress requirements instead of prompt instructions.",
+      "t": 1380
+    },
+    {
+      "type": "learn",
+      "text": "Create a mesh or join the public testnet and connect agents across a laptop, a VM and a cluster.",
+      "t": 1860
+    },
+    {
+      "type": "contribute",
+      "text": "Help with Agent Mesh's A2A integration or new SDK and platform integrations.",
+      "t": 1800
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

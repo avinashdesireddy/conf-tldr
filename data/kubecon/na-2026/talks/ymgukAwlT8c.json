@@ -1,0 +1,131 @@
+{
+  "video_id": "ymgukAwlT8c",
+  "event": "kubecon/na-2026",
+  "title": "Who Ran Up the Inference Bill? AI Traffic Control with KServe and Gateway API Inference Extensions",
+  "speakers": [
+    {
+      "name": "Lasse Vierow",
+      "org": "Independent"
+    }
+  ],
+  "duration_s": 952,
+  "youtube_url": "https://www.youtube.com/watch?v=ymgukAwlT8c",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Who+Ran+Up+the+Inference+Bill%3F+AI+Traffic+Control+with+KServe+and+Gateway+API+Inference+Extensions"
+  },
+  "tags": [
+    "ai-inference",
+    "ai-gateway",
+    "cost",
+    "rate-limiting",
+    "gateway-api"
+  ],
+  "tldr": "A beginner-level talk on attributing and controlling inference spend by putting an AI-aware gateway in front of KServe models. A live demo on kind uses agentgateway with the Gateway API Inference Extension to log tokens per team, enforce per-team token budgets, block sensitive data and fail over to a cloud LLM.",
+  "key_points": [
+    {
+      "text": "Inference bills show a total but not which team or service spent the tokens, and request counts mislead because token use per request varies widely.",
+      "t": 120
+    },
+    {
+      "text": "Inference traffic differs from classic traffic: seconds to minutes, streamed token by token, costly, routed on the body, so request limits and round-robin balancing stop working.",
+      "t": 180
+    },
+    {
+      "text": "KServe creates the HTTPRoute, InferencePool and endpoint picker from one model resource.",
+      "t": 240
+    },
+    {
+      "text": "The endpoint picker chooses pods using KV cache, prefix and LoRA adapter state instead of load alone.",
+      "t": 360
+    },
+    {
+      "text": "Any gateway that supports the Inference Extension works; the demo uses agentgateway as the AI-aware gateway.",
+      "t": 360
+    },
+    {
+      "text": "Local models need a cost too; a rough GPU-hours-over-tokens figure is enough to visualize spend.",
+      "t": 420
+    },
+    {
+      "text": "Plain Gateway API logs show only status codes; with the inference extension, logs include input and output tokens and the model.",
+      "t": 600
+    },
+    {
+      "text": "Per-team traffic showed the team with the fewest requests spent the most tokens.",
+      "t": 720
+    },
+    {
+      "text": "A guardrail rejected a prompt containing a credit card number at the gateway; a team past its token budget got 429s while other teams kept working.",
+      "t": 720
+    },
+    {
+      "text": "When the local model returned 500, the gateway failed over to a cloud LLM without interrupting users.",
+      "t": 840
+    },
+    {
+      "text": "Takeaways: meter tokens not requests, put a name on every token, control spend at the gateway, build on standards and keep policy thin.",
+      "t": 840
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Example per-team budget: 60,000 tokens, after which requests get HTTP 429.",
+      "t": 780
+    },
+    {
+      "text": "Mock LLM log entry: 6 input tokens, 1 output token.",
+      "t": 660
+    },
+    {
+      "text": "The ML research team sent only 3 requests but spent the most tokens.",
+      "t": 720
+    }
+  ],
+  "projects": [
+    "KServe",
+    "Gateway API",
+    "Gateway API Inference Extension",
+    "agentgateway",
+    "kind",
+    "cert-manager",
+    "Kubernetes"
+  ],
+  "open_gaps": [
+    {
+      "text": "Per-token cost for self-hosted models is a rough estimate, not a production calculation.",
+      "t": 420
+    },
+    {
+      "text": "Classic request limits and round-robin load balancing do not fit token-based inference traffic.",
+      "t": 180
+    },
+    {
+      "text": "Standard Gateway API logs carry no token or model data without an inference-aware gateway.",
+      "t": 600
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Add per-team token budgets and failover to a cloud model at your AI gateway.",
+      "t": 780
+    },
+    {
+      "type": "learn",
+      "text": "Run the speaker's kind-based demo repo with KServe and agentgateway.",
+      "t": 540
+    },
+    {
+      "type": "build",
+      "text": "Export gateway token logs to your monitoring stack to split the inference bill by team.",
+      "t": 660
+    },
+    {
+      "type": "contribute",
+      "text": "Join the KServe CNCF Slack or the agentgateway Discord to work on AI gateway features.",
+      "t": 900
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

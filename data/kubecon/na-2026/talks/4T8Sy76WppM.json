@@ -1,0 +1,122 @@
+{
+  "video_id": "4T8Sy76WppM",
+  "event": "kubecon/na-2026",
+  "title": "Least-Privilege by Default: Standardizing Identity-Aware AI Agent Access into a Golden Path",
+  "speakers": [
+    {
+      "name": "Masato Kozuka",
+      "org": "Hitachi, Ltd."
+    }
+  ],
+  "duration_s": 2036,
+  "youtube_url": "https://www.youtube.com/watch?v=4T8Sy76WppM",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Least-Privilege+by+Default%3A+Standardizing+Identity-Aware+AI+Agent+Access+into+a+Golden+Path"
+  },
+  "tags": [
+    "agent-security",
+    "identity",
+    "platform-engineering",
+    "golden-path",
+    "mcp"
+  ],
+  "tldr": "Least privilege for an agent acting on a user's behalf means every call may do only what both the user and the agent are allowed to do. Hitachi's design builds seven rules into a platform golden path using Keycloak token exchange, SPIFFE/SPIRE attestation, attribute-based policy and Backstage templates, so teams only declare and approve.",
+  "key_points": [
+    {
+      "text": "MCP made connecting tools easy, but each team secures access its own way (agent's own account, static keys, homemade token checks), causing both vulnerabilities and platform sprawl.",
+      "t": 60
+    },
+    {
+      "text": "Pillar 1, on whose behalf: keep the user in the sub claim at every hop by exchanging the token for a new one with the next server as audience, instead of passing the first token along.",
+      "t": 240
+    },
+    {
+      "text": "The common shortcut, client credentials, makes the agent act as itself (a confused deputy); disable agent service accounts in the authorization server and reject tokens without a user at the MCP server.",
+      "t": 300
+    },
+    {
+      "text": "Pillar 2, which agent: SPIFFE attests the pod (namespace, image digest) and issues a short-lived ID; the authorization server accepts only that, not static client secrets, and writes the agent into the client_id claim.",
+      "t": 420
+    },
+    {
+      "text": "Pillar 3, what is allowed: the authorization server issues tokens only for approved targets, and the MCP server runs a policy check on both user and agent attributes, e.g. low agent clearance blocks a high-sensitivity payment tool.",
+      "t": 600
+    },
+    {
+      "text": "A server that skips the audience check accepts tokens meant for another server and defeats target restriction; one team's leaked key can then reach another team's server.",
+      "t": 660
+    },
+    {
+      "text": "Delivery: three rules live in the authorization server (Keycloak with SPIRE), four in the agent sidecar and server middleware shipped via Backstage templates; teams write only their tools.",
+      "t": 780
+    },
+    {
+      "text": "Each agent's client is generated from its declaration, not set by hand, because a misconfigured target in the shared layer would affect every agent.",
+      "t": 960
+    },
+    {
+      "text": "Broad declarations are split into one request per target, each approved by that server's owner, so approval does not pile up in a central team.",
+      "t": 1140
+    },
+    {
+      "text": "Demo: a receipt with a hidden instruction to fetch payroll data fails because Keycloak never issues a payroll token for the expense agent.",
+      "t": 1380
+    },
+    {
+      "text": "Q&A: for SaaS products that do not accept these tokens, an ingress gateway can run the same policy in front of them.",
+      "t": 1680
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Seven rules across three pillars.",
+      "t": 720
+    }
+  ],
+  "projects": [
+    "Keycloak",
+    "SPIFFE",
+    "SPIRE",
+    "Backstage",
+    "MCP",
+    "Kubernetes"
+  ],
+  "open_gaps": [
+    {
+      "text": "Agents with no user behind them are out of scope for this model.",
+      "t": 180
+    },
+    {
+      "text": "A team can still build a server by hand without the template and skip the audience check.",
+      "t": 1020
+    },
+    {
+      "text": "User identity cannot be propagated into SaaS products that accept only API keys, so their audit logs show a service account.",
+      "t": 1740
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Ship MCP server and agent templates with token exchange, audience checks, user-required checks and attribute-based policy built in.",
+      "t": 1020
+    },
+    {
+      "type": "build",
+      "text": "Replace static agent keys with SPIRE-attested workload identity accepted by your authorization server.",
+      "t": 480
+    },
+    {
+      "type": "build",
+      "text": "Add a declare-and-approve flow where each target server's owner approves agent access and the platform generates the client.",
+      "t": 1200
+    },
+    {
+      "type": "learn",
+      "text": "OAuth 2.0 Token Exchange and the confused deputy problem for agents acting on behalf of users.",
+      "t": 300
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

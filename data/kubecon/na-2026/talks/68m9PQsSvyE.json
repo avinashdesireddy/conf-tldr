@@ -1,0 +1,137 @@
+{
+  "video_id": "68m9PQsSvyE",
+  "event": "kubecon/na-2026",
+  "title": "Seeing Inside LLM Inference: Observability and Cost Visibility for llm-d on Kubernetes",
+  "speakers": [
+    {
+      "name": "Nili Guy",
+      "org": "IBM"
+    },
+    {
+      "name": "Guangya Liu",
+      "org": "JPMorgan Chase"
+    }
+  ],
+  "duration_s": 935,
+  "youtube_url": "https://www.youtube.com/watch?v=68m9PQsSvyE",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Seeing+Inside+LLM+Inference%3A+Observability+and+Cost+Visibility+for+llm-d+on+Kubernetes"
+  },
+  "tags": [
+    "ai-inference",
+    "observability",
+    "tracing",
+    "cost",
+    "llm-d"
+  ],
+  "tldr": "The llm-d observability and router SIG leads show end-to-end tracing of a request through the gateway, endpoint picker, KV cache lookup and prefill/decode pods, and use metric-to-trace-to-log correlation to find a bad scorer weight behind a TTFT regression. They then describe combining llm-d metrics with OpenCost to compute per-token, per-tenant cost, which is early work that is already upstream.",
+  "key_points": [
+    {
+      "text": "A request flows from Envoy to the endpoint picker (EPP), which checks KV cache state, picks prefill and decode pods, and a sidecar sends the prompt to prefill, after which decode pulls the KV cache GPU to GPU.",
+      "t": 60
+    },
+    {
+      "text": "One trace covers tokenization, longest-prefix cache lookup, profile and scorer runs, endpoint selection, and prefill/decode; routing is a tiny part of the timeline.",
+      "t": 120
+    },
+    {
+      "text": "Span attributes include the longest cached prefix in blocks, top endpoints and scores, TTFT and queue latency.",
+      "t": 180
+    },
+    {
+      "text": "Grafana links metrics to traces in Jaeger with one click; logs carry trace and span IDs, but log-trace correlation is not in the dashboard yet, so you grep the trace ID.",
+      "t": 240
+    },
+    {
+      "text": "Demo: a P99 TTFT alert led to a trace where the pod without the cache won because the cache scorer weight was zero, so the prompt was recomputed.",
+      "t": 300
+    },
+    {
+      "text": "No error logs appeared; the EPP behaved correctly on a bad config, traced to a Helm release that changed the weight from 3 to 0.",
+      "t": 360
+    },
+    {
+      "text": "Cost has two views: allocation (deployed capacity on given hardware) and usage (per-tenant, per-user tokens), with cost per token as total cost over tokens served.",
+      "t": 600
+    },
+    {
+      "text": "llm-d router and gateway metrics plus vLLM or SGLang metrics go to Prometheus; OpenCost combines them with infrastructure cost and emits cost metrics at different granularities.",
+      "t": 780
+    },
+    {
+      "text": "The goal is to compare self-hosted open-weights serving with sending requests to external providers, and to spot idle GPUs.",
+      "t": 600
+    },
+    {
+      "text": "Dashboards, observability and the OpenCost integration are all upstream in llm-d.",
+      "t": 900
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Alert fired on P99 TTFT above 250 ms for more than 2 minutes; P99 jumped from about 200 ms to 600 ms.",
+      "t": 240
+    },
+    {
+      "text": "Scores: cached pod 3.86 versus uncached pod 3.93 once the cache weight was zero.",
+      "t": 300
+    },
+    {
+      "text": "Prefill took about 569 ms for about 4,000 tokens, 10x a healthy prefill.",
+      "t": 360
+    },
+    {
+      "text": "Good vs bad trace for a ~3,800-token, fully cached prompt (59 blocks): 152 ms prefill with weight 3, 569 ms with weight 0.",
+      "t": 420
+    }
+  ],
+  "projects": [
+    "llm-d",
+    "vLLM",
+    "SGLang",
+    "Envoy",
+    "Prometheus",
+    "Grafana",
+    "Jaeger",
+    "OpenCost",
+    "Helm"
+  ],
+  "open_gaps": [
+    {
+      "text": "Log-to-trace correlation is not supported from the dashboard yet; it relies on grepping trace IDs.",
+      "t": 240
+    },
+    {
+      "text": "The OpenCost cost model for llm-d is initial work, still being evaluated in production.",
+      "t": 840
+    },
+    {
+      "text": "Per-tenant and per-user cost granularity across shared models on mixed hardware is still being worked out.",
+      "t": 660
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Use EPP trace attributes (prefix blocks, scores, chosen endpoint) to debug routing regressions.",
+      "t": 180
+    },
+    {
+      "type": "build",
+      "text": "Add alerts on scorer config changes, since a bad weight produced no error logs.",
+      "t": 420
+    },
+    {
+      "type": "contribute",
+      "text": "Add log-trace correlation to the upstream llm-d Grafana dashboards.",
+      "t": 240
+    },
+    {
+      "type": "build",
+      "text": "Feed llm-d and vLLM metrics into OpenCost to compare self-hosted cost per token with external API pricing.",
+      "t": 840
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

@@ -1,0 +1,162 @@
+{
+  "video_id": "n8t6AblQUMY",
+  "event": "kubecon/na-2026",
+  "title": "Agents Fail. Workflows Recover. Durable Agent Orchestration with Cadence",
+  "speakers": [
+    {
+      "name": "Diana Zawadzki",
+      "org": "Uber"
+    },
+    {
+      "name": "Shijie Sheng",
+      "org": "Uber"
+    }
+  ],
+  "duration_s": 1574,
+  "youtube_url": "https://www.youtube.com/watch?v=n8t6AblQUMY",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Agents+Fail.+Workflows+Recover.+Durable+Agent+Orchestration+with+Cadence"
+  },
+  "tags": [
+    "agents",
+    "durable-execution",
+    "workflows",
+    "fault-tolerance",
+    "production"
+  ],
+  "tldr": "Uber's Cadence team shows how wrapping model and tool calls as Cadence activities lets an agent resume after rate limits or worker crashes instead of starting over. Uber's Agent Executor Service already runs hundreds of thousands of agentic workflows on Cadence, and its execution history pointed straight at the cause of most timeouts.",
+  "key_points": [
+    {
+      "text": "Each model or tool call is a Cadence activity, a workflow orders them, and a worker runs the code; Cadence records progress in a separate service so a replacement worker can reuse completed results.",
+      "t": 60
+    },
+    {
+      "text": "Workflows can wait for external input, such as a human decision, or for time to pass.",
+      "t": 120
+    },
+    {
+      "text": "Smarter models do not prevent disks failing, APIs going down or workers crashing, so systems must assume every component fails.",
+      "t": 120
+    },
+    {
+      "text": "Common agent failures: rate limits, endless loops, overconfident unsupported conclusions, stalls waiting on human review, and worker process crashes.",
+      "t": 180
+    },
+    {
+      "text": "Cadence stores only the inputs and outputs of each step; it knows where the workflow is, not the business logic.",
+      "t": 360
+    },
+    {
+      "text": "Demo: an on-call agent analyzing a checkout 500 error gets rate limited fetching logs, and Cadence retries automatically with configurable retryable and non-retryable error types.",
+      "t": 480
+    },
+    {
+      "text": "A human sends a guidance signal to the workflow when the first answer has low confidence; the agent replans and traces the error to an exhausted ledger connection pool.",
+      "t": 600
+    },
+    {
+      "text": "When the worker is killed, a new worker replays the stored history to rebuild state, with no repeated tool calls, and then takes the approval signal.",
+      "t": 660
+    },
+    {
+      "text": "Workflow reset works as an undo for agents: roll back to a step before a bad decision instead of asking the agent to repair it.",
+      "t": 780
+    },
+    {
+      "text": "Timeout breakdowns from Cadence observability narrowed the problem to one under-provisioned worker pool.",
+      "t": 840
+    },
+    {
+      "text": "Q&A: Temporal forked from Cadence; Cadence works with agent sandboxes per activity and sits at the application layer above deployment substrates; avoid hot shards and use continue-as-new for long histories.",
+      "t": 1080
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Cadence serves over 4,000 use cases at Uber.",
+      "t": 240
+    },
+    {
+      "text": "The Agent Executor Service, built in July, hosted around 830,000 agentic workflows on Cadence by September.",
+      "t": 300
+    },
+    {
+      "text": "Service error analyzer: 36,000 runs in 30 days, about 6,000 of them timed out.",
+      "t": 360
+    },
+    {
+      "text": "In a newer measurement, zero runs of that agent timed out, failed or were terminated.",
+      "t": 420
+    },
+    {
+      "text": "In the failure-injected demo, Cadence halved model responses and input, output and total tokens, with zero new calls during recovery.",
+      "t": 720
+    },
+    {
+      "text": "About two-thirds of runs completed, a third timed out, and very few failed.",
+      "t": 780
+    },
+    {
+      "text": "Over 32,000 runs completed despite at least one earlier failure.",
+      "t": 840
+    },
+    {
+      "text": "50% of timeouts came from missing worker responses, another third from activity pickup, and over 99% occurred in one worker pool.",
+      "t": 840
+    },
+    {
+      "text": "Temporal forked from Cadence in 2019.",
+      "t": 1080
+    }
+  ],
+  "projects": [
+    "Cadence",
+    "Michelangelo",
+    "Temporal",
+    "Google ADK",
+    "OpenAI Agents SDK",
+    "Agent Sandbox"
+  ],
+  "open_gaps": [
+    {
+      "text": "Built-in guardrail functions are not yet part of the current agent framework integrations.",
+      "t": 1200
+    },
+    {
+      "text": "Cadence cannot fix workflow logic errors that teams write themselves; those still surface as timeouts.",
+      "t": 840
+    },
+    {
+      "text": "More agent framework integrations are needed beyond Google ADK and OpenAI Agents; the team asks for contributions.",
+      "t": 1020
+    },
+    {
+      "text": "Workflow history size is limited, so long-running agents need continue-as-new.",
+      "t": 1380
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Run the live demo from the Cadence AI samples repo, including the injected failures.",
+      "t": 1020
+    },
+    {
+      "type": "contribute",
+      "text": "Add a Cadence integration for another agent framework, or guardrail activities for existing ones.",
+      "t": 1020
+    },
+    {
+      "type": "build",
+      "text": "Wrap each model and tool call in an agent as a durable activity with explicit retry policies and a human approval signal.",
+      "t": 960
+    },
+    {
+      "type": "build",
+      "text": "Break down agent timeouts by cause (worker response, activity pickup, heartbeat) to find under-provisioned worker pools.",
+      "t": 840
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

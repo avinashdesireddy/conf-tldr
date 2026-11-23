@@ -1,0 +1,142 @@
+{
+  "video_id": "rAyt198OTFA",
+  "event": "kubecon/na-2026",
+  "title": "Lessons Learned Sandboxing Agents with kagent",
+  "speakers": [
+    {
+      "name": "Peter Jausovec",
+      "org": "Solo.io"
+    },
+    {
+      "name": "Nina Polshakova",
+      "org": "Solo.io"
+    },
+    {
+      "name": "Eitan Yarmush",
+      "org": "Solo.io"
+    }
+  ],
+  "duration_s": 1773,
+  "youtube_url": "https://www.youtube.com/watch?v=rAyt198OTFA",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Lessons+Learned+Sandboxing+Agents+with+kagent"
+  },
+  "tags": [
+    "agent-security",
+    "sandboxes",
+    "kagent",
+    "agent-substrate",
+    "isolation"
+  ],
+  "tldr": "Solo.io engineers tried a pod per agent, Anthropic's sandbox runtime, Agent Sandbox and NVIDIA OpenShell, and found each solved only part of the problem, so they joined Google's Agent Substrate and rebuilt kagent 1.0 on it. Their main lessons: isolation is table stakes, and the hard parts are suspend and resume, keeping all controls outside the agent, identity that follows the session, and treating snapshots as sensitive data.",
+  "key_points": [
+    {
+      "text": "An agent needs compute, identity, networking and storage like any workload, but sessions last hours, are stateful, mostly idle, and the agent can do anything a user can.",
+      "t": 60
+    },
+    {
+      "text": "A sandbox defines what an agent can see, touch, call and persist: file system, network, tools, credentials, identity, and cleanup between sessions.",
+      "t": 120
+    },
+    {
+      "text": "A homegrown pod per agent gave Kubernetes identity, policy and observability, but no real sandbox.",
+      "t": 180
+    },
+    {
+      "text": "Anthropic's sandbox runtime (bubblewrap on Linux, sandbox-exec on macOS, domain-allowlist proxy) suits laptops but meant many sandbox processes inside kagent pods, with no per-agent identity, a shared host kernel, and the proxy inside the sandbox.",
+      "t": 240
+    },
+    {
+      "text": "Agent Sandbox gave a stateful pod under gVisor or Kata with sub-second warm pools, but idle agents still held CPU and memory and identity stayed with the pod.",
+      "t": 360
+    },
+    {
+      "text": "NVIDIA OpenShell denied egress by default with per-binary rules and swapped placeholder credentials for real keys at the proxy, but still ran one always-on sandbox per agent with enforcement inside it.",
+      "t": 420
+    },
+    {
+      "text": "Agent Substrate snapshots idle actors to object storage, restores them in milliseconds, keeps the Kubernetes API off the hot path, and is default-deny with no keys inside.",
+      "t": 540
+    },
+    {
+      "text": "kagent 1.0 is rebuilt on Agent Substrate: a harness (owned by infra), an agent template, and an agent binding them, compiled into an actor template; each session becomes an actor reachable over A2A, MCP or gRPC.",
+      "t": 660
+    },
+    {
+      "text": "A new sandbox template resource defines the OCI image, preloaded directories, git repos and skills; one user's agents began sharing state through a common sandbox file system on their own.",
+      "t": 960
+    },
+    {
+      "text": "Lessons: all controls live outside the agent, identity follows the actor not the pod, suspended agents are stored data that need encryption, retention and restore rules, and the sandbox runtime becomes part of the snapshot format.",
+      "t": 1080
+    },
+    {
+      "text": "Demo: Anthropic-hosted managed agents run sessions in kagent sandboxes on your cluster; file systems are isolated per session and egress is denied until a policy is applied at runtime.",
+      "t": 1320
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Agent Sandbox warm pools start a pod in under a second.",
+      "t": 360
+    },
+    {
+      "text": "Agent Substrate restores actors from snapshots in milliseconds, versus seconds for pods.",
+      "t": 540
+    }
+  ],
+  "projects": [
+    "kagent",
+    "Agent Substrate",
+    "Agent Sandbox",
+    "gVisor",
+    "Kata Containers",
+    "NVIDIA OpenShell",
+    "Anthropic Sandbox Runtime",
+    "Kubernetes",
+    "Model Context Protocol",
+    "A2A"
+  ],
+  "open_gaps": [
+    {
+      "text": "kagent has not enabled memory snapshots because of their complexity, and the runtime-specific snapshot format needs to be hidden from most users.",
+      "t": 1200
+    },
+    {
+      "text": "Managed-agent support (provider-hosted loop, local sandboxes) is experimental and on main only; the team wants feedback on whether it belongs in kagent core.",
+      "t": 1320
+    },
+    {
+      "text": "Snapshotting GPU state so inference can run inside the same actors is still being worked on.",
+      "t": 1680
+    },
+    {
+      "text": "Agents sharing a sandbox file system to talk to each other was an emergent, probably insecure behavior.",
+      "t": 1020
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Compare where egress and credential enforcement live in Anthropic's sandbox runtime, OpenShell, Agent Sandbox and Agent Substrate.",
+      "t": 240
+    },
+    {
+      "type": "build",
+      "text": "Encrypt agent snapshot buckets and define retention and who may restore a session.",
+      "t": 1200
+    },
+    {
+      "type": "contribute",
+      "text": "Try the experimental managed-agent support in kagent main and report whether it should be in core.",
+      "t": 1320
+    },
+    {
+      "type": "build",
+      "text": "Define kagent sandbox templates with default-deny egress and add allow rules dynamically per agent.",
+      "t": 1560
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

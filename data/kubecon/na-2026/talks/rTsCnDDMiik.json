@@ -1,0 +1,146 @@
+{
+  "video_id": "rTsCnDDMiik",
+  "event": "kubecon/na-2026",
+  "title": "Platform-First AI Agent Security: Zero-Trust Patterns for Kubernetes",
+  "speakers": [
+    {
+      "name": "Carlos Santana",
+      "org": "AWS"
+    }
+  ],
+  "duration_s": 1670,
+  "youtube_url": "https://www.youtube.com/watch?v=rTsCnDDMiik",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Platform-First+AI+Agent+Security%3A+Zero-Trust+Patterns+for+Kubernetes"
+  },
+  "tags": [
+    "agent-security",
+    "zero-trust",
+    "sandboxes",
+    "platform-engineering",
+    "kro"
+  ],
+  "tldr": "Carlos Santana argues platform teams should treat AI agents as untrusted tenants and layer identity, policy and isolation around them using CNCF projects. He shows KRO compositions that stamp out agent workloads, egress policies and Agent Substrate worker pools per namespace, plus Agent Sandbox warm pools, OpenShell with Cedar policies, and credential proxies.",
+  "key_points": [
+    {
+      "text": "Enterprise interest in agent security is driven by insecure agent use and incidents where agents reach systems they should not, not by productivity.",
+      "t": 60
+    },
+    {
+      "text": "Treat agents as tenants running untrusted, LLM-generated code; the three concerns are identity, policy and isolation.",
+      "t": 240
+    },
+    {
+      "text": "Identity has two cases: an agent acting for an interactive user (token exchange) and an agent running overnight without the user; SPIFFE/SPIRE gives agents a URI identity tied to a JWT or X.509 certificate.",
+      "t": 240
+    },
+    {
+      "text": "Policy covers what an agent may run and read, including layer 7 paths, plus temporal rules (e.g. deny after five executions) via Dogwood, an AWS project built on Cedar, using audit logs of agent sessions.",
+      "t": 360
+    },
+    {
+      "text": "A KRO resource graph definition declares a CRD and its controller in YAML with CEL, so platform teams can define an AgentWorkload with a narrow prompt and allowed FQDNs without writing Go.",
+      "t": 540
+    },
+    {
+      "text": "The AgentWorkload composes an egress policy, an agent template and an agent, the kagent abstractions now built on Agent Substrate; KRO infers creation order from references.",
+      "t": 660
+    },
+    {
+      "text": "A new experimental KRO graph mode creates a worker pool, harness, service account and quota in any namespace labeled as a tenant; resource quotas can cap custom resources such as agents.",
+      "t": 900
+    },
+    {
+      "text": "Owning your own platform APIs shields consumers from breaking changes in fast-moving agent projects.",
+      "t": 1080
+    },
+    {
+      "text": "Isolation levels: gVisor syscall emulation, VM isolation with Kata Containers, and hardware isolation with the newly announced AWS Nitro Sandboxes on EKS.",
+      "t": 1140
+    },
+    {
+      "text": "Agent Sandbox warm pools with claims (like PVCs) hand out a ready sandbox instantly and backfill the pool.",
+      "t": 1200
+    },
+    {
+      "text": "OpenShell restricts which files and binaries an agent can use; an open PR proposes Cedar as its policy language, e.g. allowing GitHub access only through one binary. Secrets are injected by a credential proxy, never given to the agent.",
+      "t": 1380
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Launching a micro VM takes three to four seconds, plus a couple of seconds for the image.",
+      "t": 1200
+    },
+    {
+      "text": "A claim against a warm pool returns a sandbox in under a second.",
+      "t": 1260
+    },
+    {
+      "text": "The KRO graph feature arrived this week in KRO 0.10 and is experimental.",
+      "t": 900
+    }
+  ],
+  "projects": [
+    "Agent Sandbox",
+    "KRO",
+    "kagent",
+    "Agent Substrate",
+    "gVisor",
+    "Kata Containers",
+    "NVIDIA OpenShell",
+    "Cedar",
+    "Dogwood",
+    "SPIFFE",
+    "SPIRE",
+    "Cilium",
+    "Amazon EKS",
+    "AWS Nitro Sandboxes",
+    "Kubernetes",
+    "containerd",
+    "Helm",
+    "OpenTelemetry"
+  ],
+  "open_gaps": [
+    {
+      "text": "Cedar as OpenShell's policy language is still an open proposal and PR, not merged.",
+      "t": 1440
+    },
+    {
+      "text": "The KRO graph mode is experimental and needs user feedback.",
+      "t": 900
+    },
+    {
+      "text": "Handling permissions for agents that run overnight without the user is an open identity question.",
+      "t": 300
+    },
+    {
+      "text": "Agent behavior cannot be pinpointed in advance, so policy must describe expected behavior rather than exact actions.",
+      "t": 420
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Define a KRO-based AgentWorkload API that bundles egress policy, agent template and quota, so teams consume a stable platform interface.",
+      "t": 780
+    },
+    {
+      "type": "build",
+      "text": "Put a credential proxy in front of agents that injects secrets into outbound requests instead of mounting them.",
+      "t": 1500
+    },
+    {
+      "type": "contribute",
+      "text": "Review the Cedar policy proposal for OpenShell and give feedback on KRO's experimental graph mode.",
+      "t": 1440
+    },
+    {
+      "type": "learn",
+      "text": "Compare gVisor, Kata Containers and hardware-isolated micro VMs for running untrusted agent code.",
+      "t": 1140
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

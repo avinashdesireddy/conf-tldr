@@ -1,0 +1,141 @@
+{
+  "video_id": "gNAANhDs5cc",
+  "event": "kubecon/na-2026",
+  "title": "Choose Your Own Adventure: The Saga of Serving LLM Inference",
+  "speakers": [
+    {
+      "name": "Whitney Lee",
+      "org": "Datadog"
+    },
+    {
+      "name": "Viktor Farcic",
+      "org": "Upbound"
+    }
+  ],
+  "duration_s": 1850,
+  "youtube_url": "https://www.youtube.com/watch?v=gNAANhDs5cc",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Choose+Your+Own+Adventure%3A+The+Saga+of+Serving+LLM+Inference"
+  },
+  "tags": [
+    "ai-inference",
+    "quantization",
+    "speculative-decoding",
+    "tensor-parallelism",
+    "benchmarking"
+  ],
+  "tldr": "The audience voted on three vLLM serving choices (quantization, sharding versus replication, speculative decoding) and the speakers deployed that configuration and its opposite side by side under load. The audience's full-precision, sharded, speculative setup was more accurate but served fewer requests, and the speakers' advice is to run experiments, not pick in advance.",
+  "key_points": [
+    {
+      "text": "The audience chose full precision, one model sharded across two GPUs, and n-gram speculative decoding; a second deployment used the opposite choices.",
+      "t": 60
+    },
+    {
+      "text": "A model scores every possible next token (about 150,000 for the demo model) and the inference engine picks one; knowledge is spread across all weights, so almost all weights are read for every token.",
+      "t": 300
+    },
+    {
+      "text": "Weights and KV cache compete for GPU memory; quantization stores each weight with fewer bits, freeing room for more and longer conversations and reducing memory reads, at the cost of drifting from how the model was trained.",
+      "t": 540
+    },
+    {
+      "text": "Switching to the quantized variant was just a different model image (Qwen3 8B to its FP8 version); not every model can go to 4 bits.",
+      "t": 900
+    },
+    {
+      "text": "Replication gives independent engines, KV caches and no GPU-to-GPU traffic but needs a model small enough and sticky routing; sharding splits weights and KV cache and needs fast GPU interconnect.",
+      "t": 960
+    },
+    {
+      "text": "Replication tends to win with many concurrent requests and enough KV cache; sharding tends to win with few requests, fast links, or models too big for one GPU.",
+      "t": 1140
+    },
+    {
+      "text": "Sharding was configured as one copy on two GPUs plus tensor parallel size 2 passed to vLLM.",
+      "t": 1200
+    },
+    {
+      "text": "Prefill processes known tokens in parallel and is compute-bound; decode is sequential and memory-bandwidth-bound.",
+      "t": 1320
+    },
+    {
+      "text": "Speculative decoding drafts several tokens (here n-gram, deterministic pattern matching on the conversation) and the model verifies them in one pass, trading compute for memory bandwidth; it is less useful when the GPU is already at high load.",
+      "t": 1440
+    },
+    {
+      "text": "Advice: you cannot make these choices in advance; serve variants in parallel with round-robin routing and compare. The demo sent telemetry via OpenTelemetry to Datadog.",
+      "t": 1680
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Demo model: Qwen3 8B, 8 billion parameters, 16-bit weights by default.",
+      "t": 420
+    },
+    {
+      "text": "Each demo GPU has 24 GB of memory; at full precision about 3 GB per GPU is left for conversations.",
+      "t": 720
+    },
+    {
+      "text": "Quantized, about 9 GB would hold weights and 9.6 GB would be free for conversations.",
+      "t": 780
+    },
+    {
+      "text": "The audience's configuration served 30-40% fewer requests and processed fewer tokens per second.",
+      "t": 1620
+    },
+    {
+      "text": "The audience's full-precision configuration answered the math test prompts 100% correctly.",
+      "t": 1620
+    },
+    {
+      "text": "Speculative decoding drafted up to four tokens ahead.",
+      "t": 1560
+    }
+  ],
+  "projects": [
+    "vLLM",
+    "Kubernetes",
+    "OpenTelemetry",
+    "Datadog",
+    "Model Plane"
+  ],
+  "open_gaps": [
+    {
+      "text": "Whether quantization hurts answers for your use case has to be measured with your own experiments.",
+      "t": 660
+    },
+    {
+      "text": "Many requests failed on the audience's configuration for reasons the speakers did not have time to explore.",
+      "t": 1620
+    },
+    {
+      "text": "Some models have no prebuilt quantized image, which makes quantizing painful.",
+      "t": 900
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Deploy two vLLM configurations side by side with round-robin routing and compare throughput and accuracy on your own prompts.",
+      "t": 1740
+    },
+    {
+      "type": "learn",
+      "text": "Prefill versus decode bottlenecks (compute versus memory bandwidth) and how speculative decoding trades one for the other.",
+      "t": 1320
+    },
+    {
+      "type": "build",
+      "text": "Add a small accuracy check (for example known math prompts) to load tests when evaluating quantized models.",
+      "t": 1620
+    },
+    {
+      "type": "write",
+      "text": "Benchmark replication versus tensor-parallel sharding on your GPU interconnect at different concurrency levels.",
+      "t": 1140
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

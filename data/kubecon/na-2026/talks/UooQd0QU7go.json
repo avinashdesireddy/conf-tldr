@@ -1,0 +1,135 @@
+{
+  "video_id": "UooQd0QU7go",
+  "event": "kubecon/na-2026",
+  "title": "Simulate, Evolve, Validate, Ship: AI-Discovered Algorithms for LLM Serving Stacks",
+  "speakers": [
+    {
+      "name": "Jing Chen",
+      "org": "IBM"
+    },
+    {
+      "name": "Mert Toslali",
+      "org": "IBM"
+    }
+  ],
+  "duration_s": 1723,
+  "youtube_url": "https://www.youtube.com/watch?v=UooQd0QU7go",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Simulate%2C+Evolve%2C+Validate%2C+Ship%3A+AI-Discovered+Algorithms+for+LLM+Serving+Stacks"
+  },
+  "tags": [
+    "ai-inference",
+    "agents",
+    "simulation",
+    "admission-control",
+    "llm-d"
+  ],
+  "tldr": "IBM Research uses a CPU-based simulator of llm-d and vLLM plus an agentic harness to discover serving policies, then validates the winners on GPUs and upstreams them to llm-d. The loop has produced admission control, flow control and LoRA routing plugins for the llm-d router.",
+  "key_points": [
+    {
+      "text": "Every llm-d subsystem (routing, admission control, flow control, scheduling, prefill/decode, autoscaling) is an open design problem, but GPU experiments take days and cost thousands of dollars, so few ideas get tested.",
+      "t": 60
+    },
+    {
+      "text": "The loop is simulate, evolve, validate, ship. A human gives only the goal, SLO constraints, workloads and hardware; the output is a production-ready llm-d policy.",
+      "t": 120
+    },
+    {
+      "text": "The simulator (BLIS) is a digital twin of llm-d and vLLM that runs on CPUs. An agentic harness plans hypotheses, writes algorithms as code, runs them in the simulator and learns across iterations.",
+      "t": 180
+    },
+    {
+      "text": "Simulation confirms the direction of a gain; real hardware measures its size. Validation turns simulated code and config into llm-d code, deploys it and benchmarks it.",
+      "t": 360
+    },
+    {
+      "text": "Translation uses three agents: one maps signals between simulator and llm-d (KV cache utilization, queue depth, priority), a writer translates, and a reviewer tests. Agents check each other's work, not their own.",
+      "t": 420
+    },
+    {
+      "text": "A time-unit mismatch in saturation detection between simulator and llm-d invalidated hours of GPU results. They added pre-deploy parity checks and post-benchmark log checks.",
+      "t": 480
+    },
+    {
+      "text": "Attaching real benchmark evidence to PRs made upstream review faster. Three policies were merged into the llm-d router: admission gate, flow control and LoRA routing.",
+      "t": 600
+    },
+    {
+      "text": "The baseline admission gate accepts everything until saturation hits 100%, when queues are already long. The new probabilistic admitter rejects low-priority requests with probability rising with saturation and always accepts critical ones.",
+      "t": 780
+    },
+    {
+      "text": "The soft reflective ceiling flow-control policy orders admitted requests so critical traffic is never blocked behind low-priority work, slowing low-priority queues as load rises without rejecting anything.",
+      "t": 1020
+    },
+    {
+      "text": "Both are llm-d plugins enabled with a configuration change.",
+      "t": 1140
+    },
+    {
+      "text": "Q&A: a prompted agent with a methodology file forgot to persist algorithms and workloads and made false claims, so they built a harness with deterministic tooling and hypothesis bundles (main, negative, ablation arms).",
+      "t": 1320
+    }
+  ],
+  "numbers": [
+    {
+      "text": "The simulator runs about 200x faster than real GPU inference.",
+      "t": 180
+    },
+    {
+      "text": "Validation setup: four H100 GPUs, a Qwen 14B model, eight workloads across four shapes (chatbot, code generation, agentic and others) at various loads.",
+      "t": 900
+    },
+    {
+      "text": "Probabilistic admission: critical-request TTFT improved by up to 97% and end-to-end latency by up to 50%, at the cost of more low-priority rejections.",
+      "t": 900
+    },
+    {
+      "text": "Flow-control policy: critical TTFT improved by up to 98%, latency improved by up to 50x, with zero requests rejected.",
+      "t": 1080
+    }
+  ],
+  "projects": [
+    "llm-d",
+    "vLLM",
+    "BLIS"
+  ],
+  "open_gaps": [
+    {
+      "text": "Running the loop continuously against live traffic is the goal but not reached; every step can fail and still needs human review of logs.",
+      "t": 1620
+    },
+    {
+      "text": "llm-d, the simulator and the harness all keep changing, which makes unattended overnight discovery hard.",
+      "t": 1620
+    },
+    {
+      "text": "Sim-to-real translation is error prone; one config mismatch forced discarding a full GPU run.",
+      "t": 540
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Enable the new admission and flow-control plugins in llm-d and compare critical-request TTFT with the baseline under overload.",
+      "t": 1140
+    },
+    {
+      "type": "build",
+      "text": "Use a CPU simulator to screen scheduling or admission policies against SLOs before spending GPU time.",
+      "t": 180
+    },
+    {
+      "type": "build",
+      "text": "Give coding agents deterministic tooling that forces them to persist algorithms, workloads and results before claiming success.",
+      "t": 1320
+    },
+    {
+      "type": "contribute",
+      "text": "Attach simulation and real-cluster benchmark evidence to llm-d PRs that change routing or scheduling policies.",
+      "t": 600
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

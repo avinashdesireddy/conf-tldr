@@ -1,0 +1,149 @@
+{
+  "video_id": "dOJarSz8FeQ",
+  "event": "kubecon/na-2026",
+  "title": "Agentic AI: Let’s Build a Reference Architecture, Live? Or at Least Try!",
+  "speakers": [
+    {
+      "name": "Ricardo Rocha",
+      "org": "CERN"
+    }
+  ],
+  "duration_s": 1991,
+  "youtube_url": "https://www.youtube.com/watch?v=dOJarSz8FeQ",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Agentic+AI%3A+Let%E2%80%99s+Build+a+Reference+Architecture%2C+Live%3F+Or+at+Least+Try%21"
+  },
+  "tags": [
+    "agents",
+    "reference-architecture",
+    "end-users",
+    "agent-security",
+    "community"
+  ],
+  "tldr": "In a CNCF End User Technical Advisory Board session, Ricardo Rocha drew a layered agentic AI reference architecture live from audience input: gateway, orchestration, sandboxing, inference, infrastructure and observability. Attendees named their tools and gaps, mainly caller identity, data privacy and the lack of a shared agent harness, and were asked to submit their own reference architectures.",
+  "key_points": [
+    {
+      "text": "The End User TAB publishes end-user reference architectures at endusers.cncf.io: projects used, diagrams, what worked, what did not, and what glue had to be built.",
+      "t": 120
+    },
+    {
+      "text": "Audience-proposed layers: gateway, data sources, inference, policies, network policies, and agent frameworks such as LangChain.",
+      "t": 300
+    },
+    {
+      "text": "Identity: one attendee sees caller identity lost as requests move toward the model and wants it carried end to end, for example with SPIFFE/SPIRE or signing.",
+      "t": 600
+    },
+    {
+      "text": "Another attendee, on AWS only, assumes a role through an IdP and SigV4-signs every request through the pipeline.",
+      "t": 660
+    },
+    {
+      "text": "Privacy: one team tokenizes and anonymizes sensitive fields before they reach a model and reverses it on the response.",
+      "t": 780
+    },
+    {
+      "text": "Gateway tools named: Envoy, agentgateway (split into MCP and LLM roles) and LiteLLM, used in front of Bedrock for routing, team access and quotas.",
+      "t": 840
+    },
+    {
+      "text": "Egress control: per-agent allowlists of DNS names so each agent reaches only the domains its tools need.",
+      "t": 1080
+    },
+    {
+      "text": "One attendee embeds the harness in each web app to reuse the user's session and permissions, but gets no shared observability.",
+      "t": 1200
+    },
+    {
+      "text": "Some workloads are tens of thousands of one-shot agents that never resume, unlike long-running coding agents, which changes how useful pause and resume is.",
+      "t": 1320
+    },
+    {
+      "text": "Sandboxes named: Kata Containers, gVisor, Bubblewrap and Firecracker. Inference: NVIDIA Dynamo, Triton, vLLM, Ollama, SGLang and llama.cpp. Agent observability: Langfuse.",
+      "t": 1380
+    },
+    {
+      "text": "Multiple submissions in one area would let the TAB build a domain-level reference architecture from common patterns.",
+      "t": 1740
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Show of hands: about five deploy only in public cloud, one only on premises, the rest mixed.",
+      "t": 1560
+    },
+    {
+      "text": "One use case has tens of thousands of agents with one to three turns each.",
+      "t": 1320
+    },
+    {
+      "text": "Example egress allowlist: about 10 domains per agent.",
+      "t": 1080
+    }
+  ],
+  "projects": [
+    "Envoy",
+    "agentgateway",
+    "LiteLLM",
+    "LangChain",
+    "Langfuse",
+    "n8n",
+    "SPIFFE",
+    "SPIRE",
+    "OpenTelemetry",
+    "Prometheus",
+    "Kata Containers",
+    "gVisor",
+    "Bubblewrap",
+    "Firecracker",
+    "NVIDIA Dynamo",
+    "Triton Inference Server",
+    "vLLM",
+    "Ollama",
+    "SGLang",
+    "llama.cpp",
+    "Amazon Bedrock"
+  ],
+  "open_gaps": [
+    {
+      "text": "Caller identity is often lost between the agent layer and the inference engine, so requests cannot be attributed.",
+      "t": 720
+    },
+    {
+      "text": "Privacy handling for data sent to third-party inference gets little attention at the conference.",
+      "t": 780
+    },
+    {
+      "text": "No shared harness pattern: teams re-implement the harness per application, without common observability.",
+      "t": 1200
+    },
+    {
+      "text": "There is no stable reference architecture yet; teams are early and still iterating.",
+      "t": 240
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "write",
+      "text": "Submit your agent platform as a CNCF end-user reference architecture, including what did not work and the glue you built.",
+      "t": 1680
+    },
+    {
+      "type": "build",
+      "text": "Build a tokenization step that strips sensitive fields before inference and restores them in the response.",
+      "t": 840
+    },
+    {
+      "type": "build",
+      "text": "Enforce per-agent FQDN egress allowlists for agent workloads.",
+      "t": 1080
+    },
+    {
+      "type": "contribute",
+      "text": "Join the End User TAB meetings or a domain user group to share agentic AI deployment feedback.",
+      "t": 1800
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

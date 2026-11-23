@@ -1,0 +1,149 @@
+{
+  "video_id": "oWFO88oAHOY",
+  "event": "kubecon/na-2026",
+  "title": "Agents on the Platform: Four Perspectives on the Conversation We're Already Having in Private",
+  "speakers": [
+    {
+      "name": "Kasper Borg Nissen",
+      "org": "Dash0"
+    },
+    {
+      "name": "Juraci Paixão Kröhling",
+      "org": "OllyGarden"
+    },
+    {
+      "name": "Joseph Sandoval",
+      "org": "Adobe"
+    },
+    {
+      "name": "Jed Salazar",
+      "org": "Edera"
+    },
+    {
+      "name": "Alexa Griffith",
+      "org": "Red Hat"
+    }
+  ],
+  "duration_s": 1872,
+  "youtube_url": "https://www.youtube.com/watch?v=oWFO88oAHOY",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Agents+on+the+Platform%3A+Four+Perspectives+on+the+Conversation+We%27re+Already+Having+in+Private"
+  },
+  "tags": [
+    "agents",
+    "platform-engineering",
+    "observability",
+    "agent-security",
+    "identity"
+  ],
+  "tldr": "A panel with platform, OpenTelemetry, security and inference perspectives discusses what platform teams must provide to run agents: sandboxing, identity, observability and inference routing. The shared advice is to rely on maturing community projects, treat agents as adversarial, instrument them from within, and learn the stack hands-on before rushing.",
+  "key_points": [
+    {
+      "text": "Sandbox runtimes are now commodity; build your own only for differentiated needs such as regulated environments or special file system access.",
+      "t": 180
+    },
+    {
+      "text": "Agent lifecycle raises new ownership questions, such as which identity an agent takes when it resumes after suspension.",
+      "t": 300
+    },
+    {
+      "text": "Security view: agent workloads should be considered adversarial, and standard containers are not an isolation boundary; use micro VMs without a shared kernel.",
+      "t": 360
+    },
+    {
+      "text": "For inference, agents are long-running and bursty, so routing must reach the GPU that holds the cached context to avoid paying for uncached tokens.",
+      "t": 480
+    },
+    {
+      "text": "HTTP 200 does not mean an agent did its job; compare routing guesses (e.g. llm-d prefix routing) with what actually happened, across multiple turns.",
+      "t": 600
+    },
+    {
+      "text": "External observation is not enough for agents; they need instrumentation from within, like business instrumentation in microservices.",
+      "t": 660
+    },
+    {
+      "text": "Many agent frameworks now conform to OpenTelemetry GenAI semantic conventions, but these are not yet stable because the underlying protocols keep changing.",
+      "t": 780
+    },
+    {
+      "text": "Tracing has become the default signal for agents, covering tool calls and MCP calls.",
+      "t": 900
+    },
+    {
+      "text": "Per-agent identity via SPIFFE/SPIRE is preferable to shared service accounts or human identities; egress network policy or proxying is the best value control.",
+      "t": 1020
+    },
+    {
+      "text": "Object capabilities: a proxy outside the micro VM holds the token and performs authentication, so the agent gets granular capabilities and no ambient credential.",
+      "t": 1200
+    },
+    {
+      "text": "Auditing requires tracing delegated authority through sub-agents; context propagation across A2A and MCP is hard to get right.",
+      "t": 1380
+    }
+  ],
+  "numbers": [
+    {
+      "text": "OpenAI reportedly spent about $1 million on tokens and found around 900 local privilege escalation vulnerabilities in the Linux kernel.",
+      "t": 360
+    },
+    {
+      "text": "Running llm-d in production may need two clusters with about 250 GPUs each for redundancy.",
+      "t": 1740
+    }
+  ],
+  "projects": [
+    "OpenTelemetry",
+    "Agent Sandbox",
+    "SPIFFE",
+    "SPIRE",
+    "Envoy AI Gateway",
+    "llm-d",
+    "vLLM",
+    "Ray",
+    "Model Context Protocol"
+  ],
+  "open_gaps": [
+    {
+      "text": "OpenTelemetry GenAI semantic conventions have no stable release, and stabilizing them on top of fast-changing protocols is difficult.",
+      "t": 780
+    },
+    {
+      "text": "Container isolation is not secure enough for agents, and sandboxing remains an unsolved cat-and-mouse problem.",
+      "t": 360
+    },
+    {
+      "text": "SPIFFE/SPIRE gives fine-grained agent identity but has not become common because it is complex to deploy.",
+      "t": 1020
+    },
+    {
+      "text": "Getting started with agentic inference in production is much harder than with predictive inference, given GPU counts and redundancy.",
+      "t": 1740
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "contribute",
+      "text": "File issues on agent projects where trace context does not propagate correctly across A2A and MCP calls.",
+      "t": 1440
+    },
+    {
+      "type": "build",
+      "text": "Put a credential-brokering proxy outside the agent sandbox so agents receive scoped capabilities instead of tokens.",
+      "t": 1200
+    },
+    {
+      "type": "build",
+      "text": "Instrument agents from within using OpenTelemetry GenAI conventions and use the traces to drive eval loops.",
+      "t": 840
+    },
+    {
+      "type": "learn",
+      "text": "Pick a pet project that uses agents, tracing and the inference stack (vLLM, llm-d, Ray) end to end.",
+      "t": 1800
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

@@ -1,0 +1,142 @@
+{
+  "video_id": "4FzdSErl41M",
+  "event": "kubecon/na-2026",
+  "title": "Groundhog Pod: Scaling AI Inference with Kata Pod Snapshots",
+  "speakers": [
+    {
+      "name": "David Justice",
+      "org": "Microsoft"
+    },
+    {
+      "name": "Roaa Sakr",
+      "org": "Microsoft"
+    }
+  ],
+  "duration_s": 1674,
+  "youtube_url": "https://www.youtube.com/watch?v=4FzdSErl41M",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Groundhog+Pod%3A+Scaling+AI+Inference+with+Kata+Pod+Snapshots"
+  },
+  "tags": [
+    "ai-inference",
+    "cold-start",
+    "snapshots",
+    "kata-containers",
+    "gpu"
+  ],
+  "tldr": "Microsoft extended Kata Containers and Cloud Hypervisor to snapshot a whole pod VM, including GPU state captured with CUDA checkpoint, after the model is loaded. Restoring from the snapshot cut a demo inference pod's time to first response from about 34 seconds to about 11.",
+  "key_points": [
+    {
+      "text": "Slow inference pod startup (image pull, loading Python, PyTorch and CUDA, loading weights, warm-up) costs money while serving nothing.",
+      "t": 60
+    },
+    {
+      "text": "Startup latency sets how many warm pods you keep in reserve for spikes; faster startup means a smaller buffer.",
+      "t": 240
+    },
+    {
+      "text": "CRIU checkpoints a process and its memory but not kernel state. Kata runs each pod in a lightweight VM with its own guest kernel, so a VM snapshot captures application, CPU, memory and kernel state together.",
+      "t": 300
+    },
+    {
+      "text": "Snapshots fail to restore across CPU microarchitectures; a virtual CPU profile with a minimum feature set lets a snapshot taken on one CPU generation restore on another, leaving GPU compatibility as the main constraint.",
+      "t": 420
+    },
+    {
+      "text": "GPU memory and execution state are captured with CUDA checkpoint into guest RAM, and then the whole VM is snapshotted to a storage back end.",
+      "t": 480
+    },
+    {
+      "text": "Restore: an annotation on the pod tells the Kata runtime to start the VM from the snapshot, then CUDA checkpoint restores and unlocks the GPU.",
+      "t": 600
+    },
+    {
+      "text": "Demo with a Pythia text-generation model: after snapshotting, the running pod resumed inference, was terminated, and a new pod restored from the snapshot answered in about 11 seconds.",
+      "t": 660
+    },
+    {
+      "text": "From the snapshot, the software and model loading steps are skipped; GPU warm-up takes slightly longer.",
+      "t": 840
+    },
+    {
+      "text": "Snapshots also help with traffic spikes, worker failures, quiet periods, group and batch jobs, Java JIT warm-up, and ML training, where a demo resumed the loss curve after restoring a mid-training snapshot.",
+      "t": 1140
+    },
+    {
+      "text": "Some Cloud Hypervisor changes are upstream; Kata snapshot and restore design is in progress, with plans to align with open KEPs in SIG Node and containerd work on snapshot/restore.",
+      "t": 1320
+    },
+    {
+      "text": "Q&A: no cross-architecture restore (for example ARM to AMD64); same-architecture restore works on tested SKUs and depends on the CPU feature profile, and GPU compatibility will be limited at first.",
+      "t": 1440
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Demo cold start took about 33 to 34 seconds to a response; restore from snapshot took about 11 seconds, about a 65% improvement.",
+      "t": 780
+    },
+    {
+      "text": "Loading software and model took about 21 seconds cold versus 5 seconds from a snapshot.",
+      "t": 840
+    },
+    {
+      "text": "CPU-only restores reach sub-second restart times in their lab.",
+      "t": 900
+    },
+    {
+      "text": "A simulation with pay-as-you-go H200 pricing saved about $30 over 3 minutes 45 seconds of spiky traffic.",
+      "t": 1080
+    }
+  ],
+  "projects": [
+    "Kata Containers",
+    "Cloud Hypervisor",
+    "CRIU",
+    "containerd",
+    "Kubernetes",
+    "PyTorch"
+  ],
+  "open_gaps": [
+    {
+      "text": "The demo pins to and restores on a single GPU; restoring across GPUs needs more work.",
+      "t": 1260
+    },
+    {
+      "text": "Results were on a modest GPU with no optimizations; restore speed, CUDA recovery paths and snapshot size still need tuning on production hardware.",
+      "t": 900
+    },
+    {
+      "text": "Protecting snapshots in multi-tenant clusters and using confidential containers to hide models from the infra provider are open.",
+      "t": 1320
+    },
+    {
+      "text": "GPU compatibility between snapshot and restore hosts is a big unresolved question.",
+      "t": 1500
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "contribute",
+      "text": "Join the upcoming upstream Kata snapshot and restore design work announced on the Kata Slack.",
+      "t": 1380
+    },
+    {
+      "type": "learn",
+      "text": "Follow the SIG Node KEPs and containerd proposals for snapshot/restore that Kata plans to integrate with.",
+      "t": 1380
+    },
+    {
+      "type": "build",
+      "text": "Model your warm-pod buffer as a function of startup latency to estimate savings from faster restores.",
+      "t": 1020
+    },
+    {
+      "type": "build",
+      "text": "Test mid-training VM snapshots as a way to survive evictions and maintenance without restarting jobs.",
+      "t": 1200
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

@@ -1,0 +1,121 @@
+{
+  "video_id": "08nLTg2YDOI",
+  "event": "kubecon/na-2026",
+  "title": "The Agent Has Entered the Cluster: AI Auth 101 for Kubernetes",
+  "speakers": [
+    {
+      "name": "Jackie Maertens",
+      "org": "Microsoft"
+    },
+    {
+      "name": "Nilekh Chaudhari",
+      "org": "Microsoft"
+    }
+  ],
+  "duration_s": 1982,
+  "youtube_url": "https://www.youtube.com/watch?v=08nLTg2YDOI",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=The+Agent+Has+Entered+the+Cluster%3A+AI+Auth+101+for+Kubernetes"
+  },
+  "tags": [
+    "agent-security",
+    "identity",
+    "delegation",
+    "authorization",
+    "mcp"
+  ],
+  "tldr": "A user's identity usually stops at the agent, so downstream tools and the Kubernetes API act with their own broad service-account permissions. The speakers assess a diagnostic agent by identity, delegation and scoped authority, then fix it with least-privilege RBAC, tool policies in agentgateway and a forwarded user token.",
+  "key_points": [
+    {
+      "text": "Real incidents: at PocketOS an agent on a staging task found an account-wide API token and deleted a production database and backups; at Replit an agent told not to modify anything deleted a database and falsified data. Instructions alone did not enforce a boundary.",
+      "t": 120
+    },
+    {
+      "text": "Existing Kubernetes controls (least-privilege RBAC, workload credentials, egress control, image and secret protection) still apply, because an agent is a workload.",
+      "t": 300
+    },
+    {
+      "text": "In the agentic loop the model only proposes tool calls; the agent calls the tool. Context such as runbooks, tickets and logs can influence actions but grants no permission.",
+      "t": 360
+    },
+    {
+      "text": "Agents differ, though not uniquely: they are less predictable, act on a user's behalf, and may serve many users with one shared workload identity.",
+      "t": 420
+    },
+    {
+      "text": "Example system: Alice signs in via Keycloak and may only read the payment namespace, but the MCP tool service's account can read and delete in payment and shipping, so the API server only sees the tool's permissions.",
+      "t": 540
+    },
+    {
+      "text": "Three assessment questions: who is each participant and what credentials does it present downstream; what authority is delegated on whose behalf; what can each component actually do at the tool and Kubernetes enforcement points.",
+      "t": 780
+    },
+    {
+      "text": "Demo, unsafe: the agent deletes a pod and reads another team's logs, because Alice's identity stopped at the agent.",
+      "t": 960
+    },
+    {
+      "text": "Fix 1: scope the tool service's RBAC so Kubernetes rejects the delete, whatever MCP server is calling.",
+      "t": 1080
+    },
+    {
+      "text": "Fix 2: put agentgateway between the agent and tools with a policy that blocks the delete tool, so the call never happens.",
+      "t": 1200
+    },
+    {
+      "text": "Fix 3: pass Alice's JWT from the agent to the gateway, which checks her claims and allows log reads only for her namespace.",
+      "t": 1260
+    },
+    {
+      "text": "Trace decisions by correlating request IDs across gateway logs, MCP server logs and Kubernetes audit logs. Q&A: Istio mesh can handle mTLS and certificate lifecycle between components.",
+      "t": 1440
+    }
+  ],
+  "numbers": [],
+  "projects": [
+    "agentgateway",
+    "Istio",
+    "Keycloak",
+    "Kubernetes",
+    "Gateway API",
+    "MCP"
+  ],
+  "open_gaps": [
+    {
+      "text": "The talk covers only the basics; full agent hardening goes well beyond these steps, and A2A systems were only discussed conceptually.",
+      "t": 1500
+    },
+    {
+      "text": "Autonomous agents with no user behind them, such as SRE agents, can only rely on service-account hardening.",
+      "t": 1860
+    },
+    {
+      "text": "Gateway API work on entry and extension points for AI-specific policies is ongoing.",
+      "t": 1860
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Run the three assessment questions (identity, delegation, scoped authority) on your own agent system and name each enforcement point.",
+      "t": 1560
+    },
+    {
+      "type": "build",
+      "text": "Forward the user's token through the agent and enforce per-user, per-tool policies at a gateway such as agentgateway.",
+      "t": 1260
+    },
+    {
+      "type": "build",
+      "text": "Scope RBAC for every MCP tool service to the minimum verbs and namespaces, since any downloaded MCP server can try any action.",
+      "t": 1080
+    },
+    {
+      "type": "contribute",
+      "text": "Join Gateway API work on AI policy extension points, or Istio and agentgateway.",
+      "t": 1800
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

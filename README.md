@@ -8,7 +8,7 @@ Short, timestamp-linked summaries of conference talks. Each one has key points, 
 
 ### KubeCon + CloudNativeCon North America 2026
 
-#### Inference (7/20 summarized)
+#### Inference (20/20 summarized)
 
 | Talk | Video |
 |---|---|
@@ -19,68 +19,68 @@ Short, timestamp-linked summaries of conference talks. Each one has key points, 
 | [DisaggregatedSet Meets Multi-EPP: Coordinating llm-d at Scale in production](events/kubecon/na-2026/talks/pVKqTxIDZcw.md) | [YouTube](https://www.youtube.com/watch?v=pVKqTxIDZcw) |
 | [Inside the Inference Load Balancer: Proxy/Controller Patterns for LLM Serving on Kubernetes](events/kubecon/na-2026/talks/wNJVJ8PhFO0.md) | [YouTube](https://www.youtube.com/watch?v=wNJVJ8PhFO0) |
 | [Composing Inference on Kubernetes: Gateway, Schedule, Serve, Observe](events/kubecon/na-2026/talks/02tyAmdoleQ.md) | [YouTube](https://www.youtube.com/watch?v=02tyAmdoleQ) |
-| New Traffic, New Rules: Standardizing AI-Aware… | [YouTube](https://www.youtube.com/watch?v=kwJTUGK4FPM) |
-| AI Gateways in Practice: Model Routing, Inference Scheduling, and MCP… | [YouTube](https://www.youtube.com/watch?v=SerQWvNyI0M) |
-| From Proxy to Platform: Building a Multi-Tenant AI Gateway | [YouTube](https://www.youtube.com/watch?v=YaEXW7f9Dr0) |
-| Simulate, Evolve, Validate, Ship: AI-Discovered Algorithms for LLM… | [YouTube](https://www.youtube.com/watch?v=UooQd0QU7go) |
-| Reduce vLLM Pod Cold Starts with KServe Kernel Caching | [YouTube](https://www.youtube.com/watch?v=v1o70EZXaZY) |
-| Groundhog Pod: Scaling AI Inference with Kata Pod Snapshots | [YouTube](https://www.youtube.com/watch?v=4FzdSErl41M) |
-| Zero-Gap GPU Execution: Building Secure, Pre-Warmed Pod Runtimes… | [YouTube](https://www.youtube.com/watch?v=j0kV0TekF3c) |
-| Frameworkless ML Serving: Scaling to Thousands of… | [YouTube](https://www.youtube.com/watch?v=fAZ-8I62m5s) |
-| Beyond Model Serving: Running Production LLMs on… | [YouTube](https://www.youtube.com/watch?v=WPukEewRCOI) |
-| Choose Your Own Adventure: The Saga of Serving LLM… | [YouTube](https://www.youtube.com/watch?v=gNAANhDs5cc) |
-| Your Peers Are Struggling With LLM Inference on… | [YouTube](https://www.youtube.com/watch?v=HMcnjNuwjAY) |
-| Follow the GPUs: How a Regulated Fortune 100 Serves… | [YouTube](https://www.youtube.com/watch?v=71NwaH0y5OM) |
-| Dropping LLM Inference Cost by Two-Thirds with Open Weights and Kubernetes | [YouTube](https://www.youtube.com/watch?v=_jb3uLrTa3s) |
+| [New Traffic, New Rules: Standardizing AI-Aware Networking in Kubernetes](events/kubecon/na-2026/talks/kwJTUGK4FPM.md) | [YouTube](https://www.youtube.com/watch?v=kwJTUGK4FPM) |
+| [AI Gateways in Practice: Model Routing, Inference Scheduling, and MCP on Kubernetes](events/kubecon/na-2026/talks/SerQWvNyI0M.md) | [YouTube](https://www.youtube.com/watch?v=SerQWvNyI0M) |
+| [From Proxy to Platform: Building a Multi-Tenant AI Gateway](events/kubecon/na-2026/talks/YaEXW7f9Dr0.md) | [YouTube](https://www.youtube.com/watch?v=YaEXW7f9Dr0) |
+| [Simulate, Evolve, Validate, Ship: AI-Discovered Algorithms for LLM Serving Stacks](events/kubecon/na-2026/talks/UooQd0QU7go.md) | [YouTube](https://www.youtube.com/watch?v=UooQd0QU7go) |
+| [Reduce vLLM Pod Cold Starts with KServe Kernel Caching](events/kubecon/na-2026/talks/v1o70EZXaZY.md) | [YouTube](https://www.youtube.com/watch?v=v1o70EZXaZY) |
+| [Groundhog Pod: Scaling AI Inference with Kata Pod Snapshots](events/kubecon/na-2026/talks/4FzdSErl41M.md) | [YouTube](https://www.youtube.com/watch?v=4FzdSErl41M) |
+| [Zero-Gap GPU Execution: Building Secure, Pre-Warmed Pod Runtimes for High-Velocity AI Agents](events/kubecon/na-2026/talks/j0kV0TekF3c.md) | [YouTube](https://www.youtube.com/watch?v=j0kV0TekF3c) |
+| [Frameworkless ML Serving: Scaling to Thousands of Models with KEDA, Pub/Sub, and Native K8s](events/kubecon/na-2026/talks/fAZ-8I62m5s.md) | [YouTube](https://www.youtube.com/watch?v=fAZ-8I62m5s) |
+| [Beyond Model Serving: Running Production LLMs on Kubernetes with KServe](events/kubecon/na-2026/talks/WPukEewRCOI.md) | [YouTube](https://www.youtube.com/watch?v=WPukEewRCOI) |
+| [Choose Your Own Adventure: The Saga of Serving LLM Inference](events/kubecon/na-2026/talks/gNAANhDs5cc.md) | [YouTube](https://www.youtube.com/watch?v=gNAANhDs5cc) |
+| [Your Peers Are Struggling With LLM Inference on Kubernetes Too. Here's What the Data Says](events/kubecon/na-2026/talks/HMcnjNuwjAY.md) | [YouTube](https://www.youtube.com/watch?v=HMcnjNuwjAY) |
+| [Follow the GPUs: How a Regulated Fortune 100 Serves Customers When No Single Cloud Has Enough](events/kubecon/na-2026/talks/71NwaH0y5OM.md) | [YouTube](https://www.youtube.com/watch?v=71NwaH0y5OM) |
+| [Dropping LLM Inference Cost by Two-Thirds with Open Weights and Kubernetes](events/kubecon/na-2026/talks/_jb3uLrTa3s.md) | [YouTube](https://www.youtube.com/watch?v=_jb3uLrTa3s) |
 
-#### Inference observability and cost (0/4 summarized)
-
-| Talk | Video |
-|---|---|
-| Seeing Inside LLM Inference: Observability and Cost… | [YouTube](https://www.youtube.com/watch?v=68m9PQsSvyE) |
-| Observability for LLM Inference on… | [YouTube](https://www.youtube.com/watch?v=4T2887KV_WM) |
-| Clueless About The Cost of AI Model Usage? OpenCost+llm-d… | [YouTube](https://www.youtube.com/watch?v=v0qNmkJSJ8A) |
-| Who Ran Up the Inference Bill? AI Traffic Control with KServe and… | [YouTube](https://www.youtube.com/watch?v=ymgukAwlT8c) |
-
-#### Agentic (0/12 summarized)
+#### Inference observability and cost (4/4 summarized)
 
 | Talk | Video |
 |---|---|
-| From Laptop to Cluster: The Agentic AI Inner Loop on Kubernetes | [YouTube](https://www.youtube.com/watch?v=KCBdIFOmzEU) |
-| The Seams Are the Trap: Agent Fleets from CNCF Parts… | [YouTube](https://www.youtube.com/watch?v=zrqy2rulX4M) |
-| Agentic AI: Let’s Build a Reference Architecture, Live? Or at Least Try! | [YouTube](https://www.youtube.com/watch?v=dOJarSz8FeQ) |
-| Pods Are Not Enough for AI Agents, Meet Agent-substrate | [YouTube](https://www.youtube.com/watch?v=gzga1kARmxI) |
-| Kubernetes Solutions for Agent-Shaped Problems | [YouTube](https://www.youtube.com/watch?v=G-8hPDtRVB8) |
-| Fireside Chat: Future of Kubernetes and Agents with Tim Hockin and Kelsey Hightower | [YouTube](https://www.youtube.com/watch?v=f3HsQwhIAnE) |
-| Governing and Scaling Agents in Heterogeneous… | [YouTube](https://www.youtube.com/watch?v=wB5-lqrDCbw) |
-| Agents on the Platform: Four Perspectives on… | [YouTube](https://www.youtube.com/watch?v=oWFO88oAHOY) |
-| Agents Fail. Workflows Recover. Durable Agent Orchestration… | [YouTube](https://www.youtube.com/watch?v=n8t6AblQUMY) |
-| Demystifying Upgrades for Stateful, Dormant AI Agents: Unleashing… | [YouTube](https://www.youtube.com/watch?v=eQoE0J6xnkA) |
-| Just Keep Swimming: Benchmarking OSS Agent Memory on Kubernetes with… | [YouTube](https://www.youtube.com/watch?v=LSFk3nqozcY) |
-| Lessons Learned Sandboxing Agents with… | [YouTube](https://www.youtube.com/watch?v=rAyt198OTFA) |
+| [Seeing Inside LLM Inference: Observability and Cost Visibility for llm-d on Kubernetes](events/kubecon/na-2026/talks/68m9PQsSvyE.md) | [YouTube](https://www.youtube.com/watch?v=68m9PQsSvyE) |
+| [Observability for LLM Inference on Kubernetes](events/kubecon/na-2026/talks/4T2887KV_WM.md) | [YouTube](https://www.youtube.com/watch?v=4T2887KV_WM) |
+| [Clueless About The Cost of AI Model Usage? OpenCost+llm-d = first of a kind inference cost tracking](events/kubecon/na-2026/talks/v0qNmkJSJ8A.md) | [YouTube](https://www.youtube.com/watch?v=v0qNmkJSJ8A) |
+| [Who Ran Up the Inference Bill? AI Traffic Control with KServe and Gateway API Inference Extensions](events/kubecon/na-2026/talks/ymgukAwlT8c.md) | [YouTube](https://www.youtube.com/watch?v=ymgukAwlT8c) |
 
-#### Agent security (0/5 summarized)
+#### Agentic (12/12 summarized)
 
 | Talk | Video |
 |---|---|
-| Platform-First AI Agent Security: Zero-Trust Patterns for Kubernetes | [YouTube](https://www.youtube.com/watch?v=rTsCnDDMiik) |
-| Securing the Agentic Future: Distributing… | [YouTube](https://www.youtube.com/watch?v=yJ7i1K488lg) |
-| Running Secure Agents at Scale | [YouTube](https://www.youtube.com/watch?v=gDLFk6_To34) |
-| The Agent Has Entered the Cluster: AI Auth 101 for… | [YouTube](https://www.youtube.com/watch?v=08nLTg2YDOI) |
-| Least-Privilege by Default: Standardizing Identity-Aware AI Agent… | [YouTube](https://www.youtube.com/watch?v=4T8Sy76WppM) |
+| [From Laptop to Cluster: The Agentic AI Inner Loop on Kubernetes](events/kubecon/na-2026/talks/KCBdIFOmzEU.md) | [YouTube](https://www.youtube.com/watch?v=KCBdIFOmzEU) |
+| [The Seams Are the Trap: Agent Fleets from CNCF Parts You Already Have](events/kubecon/na-2026/talks/zrqy2rulX4M.md) | [YouTube](https://www.youtube.com/watch?v=zrqy2rulX4M) |
+| [Agentic AI: Let’s Build a Reference Architecture, Live? Or at Least Try!](events/kubecon/na-2026/talks/dOJarSz8FeQ.md) | [YouTube](https://www.youtube.com/watch?v=dOJarSz8FeQ) |
+| [Pods Are Not Enough for AI Agents, Meet Agent-substrate](events/kubecon/na-2026/talks/gzga1kARmxI.md) | [YouTube](https://www.youtube.com/watch?v=gzga1kARmxI) |
+| [Kubernetes Solutions for Agent-Shaped Problems](events/kubecon/na-2026/talks/G-8hPDtRVB8.md) | [YouTube](https://www.youtube.com/watch?v=G-8hPDtRVB8) |
+| [Fireside Chat: Future of Kubernetes and Agents with Tim Hockin and Kelsey Hightower](events/kubecon/na-2026/talks/f3HsQwhIAnE.md) | [YouTube](https://www.youtube.com/watch?v=f3HsQwhIAnE) |
+| [Governing and Scaling Agents in Heterogeneous Environments](events/kubecon/na-2026/talks/wB5-lqrDCbw.md) | [YouTube](https://www.youtube.com/watch?v=wB5-lqrDCbw) |
+| [Agents on the Platform: Four Perspectives on the Conversation We're Already Having in Private](events/kubecon/na-2026/talks/oWFO88oAHOY.md) | [YouTube](https://www.youtube.com/watch?v=oWFO88oAHOY) |
+| [Agents Fail. Workflows Recover. Durable Agent Orchestration with Cadence](events/kubecon/na-2026/talks/n8t6AblQUMY.md) | [YouTube](https://www.youtube.com/watch?v=n8t6AblQUMY) |
+| [Demystifying Upgrades for Stateful, Dormant AI Agents: Unleashing Seamless Updates in Dynamic Sand](events/kubecon/na-2026/talks/eQoE0J6xnkA.md) | [YouTube](https://www.youtube.com/watch?v=eQoE0J6xnkA) |
+| [Just Keep Swimming: Benchmarking OSS Agent Memory on Kubernetes with OpenTelemetry](events/kubecon/na-2026/talks/LSFk3nqozcY.md) | [YouTube](https://www.youtube.com/watch?v=LSFk3nqozcY) |
+| [Lessons Learned Sandboxing Agents with kagent](events/kubecon/na-2026/talks/rAyt198OTFA.md) | [YouTube](https://www.youtube.com/watch?v=rAyt198OTFA) |
 
-#### GPUs and scheduling (1/8 summarized)
+#### Agent security (5/5 summarized)
+
+| Talk | Video |
+|---|---|
+| [Platform-First AI Agent Security: Zero-Trust Patterns for Kubernetes](events/kubecon/na-2026/talks/rTsCnDDMiik.md) | [YouTube](https://www.youtube.com/watch?v=rTsCnDDMiik) |
+| [Securing the Agentic Future: Distributing LLM Weights and Sandboxed AI Agents via Harbor](events/kubecon/na-2026/talks/yJ7i1K488lg.md) | [YouTube](https://www.youtube.com/watch?v=yJ7i1K488lg) |
+| [Running Secure Agents at Scale](events/kubecon/na-2026/talks/gDLFk6_To34.md) | [YouTube](https://www.youtube.com/watch?v=gDLFk6_To34) |
+| [The Agent Has Entered the Cluster: AI Auth 101 for Kubernetes](events/kubecon/na-2026/talks/08nLTg2YDOI.md) | [YouTube](https://www.youtube.com/watch?v=08nLTg2YDOI) |
+| [Least-Privilege by Default: Standardizing Identity-Aware AI Agent Access into a Golden Path](events/kubecon/na-2026/talks/4T8Sy76WppM.md) | [YouTube](https://www.youtube.com/watch?v=4T8Sy76WppM) |
+
+#### GPUs and scheduling (8/8 summarized)
 
 | Talk | Video |
 |---|---|
 | [The Scheduling Stack: Real-World Lessons from Anthropic, Anyscale, Google, and CERN](events/kubecon/na-2026/talks/t-r-my2ngZ8.md) | [YouTube](https://www.youtube.com/watch?v=t-r-my2ngZ8) |
-| Quota Isn't Enough: Topology Aware Scheduling on Modern… | [YouTube](https://www.youtube.com/watch?v=_njXLk28JT0) |
-| Many Clusters, One GPU Pool: Locality-Aware Scheduling and Data… | [YouTube](https://www.youtube.com/watch?v=kHbLvCbxslg) |
-| One Workload to Rule Them All: Workload Aware Scheduling for… | [YouTube](https://www.youtube.com/watch?v=3O1MewPx8oA) |
-| The Latest in GPU, TPU, NIC and Other Device… | [YouTube](https://www.youtube.com/watch?v=ohw9hntgNCU) |
-| Deep Dive Into the DRA Driver… | [YouTube](https://www.youtube.com/watch?v=vYDpOV7IvEc) |
-| Why Are You Still Wasting Whole GPUs? Hardware-Level Sharing, Scheduled with… | [YouTube](https://www.youtube.com/watch?v=qGvckRV9AwU) |
-| Beyond the Cluster Boundary: Sharing GPUs at Scale | [YouTube](https://www.youtube.com/watch?v=9EQCSHWCN6Y) |
+| [Quota Isn't Enough: Topology Aware Scheduling on Modern GPU Clusters](events/kubecon/na-2026/talks/_njXLk28JT0.md) | [YouTube](https://www.youtube.com/watch?v=_njXLk28JT0) |
+| [Many Clusters, One GPU Pool: Locality-Aware Scheduling and Data Delivery With Kueue and Dragonfly](events/kubecon/na-2026/talks/kHbLvCbxslg.md) | [YouTube](https://www.youtube.com/watch?v=kHbLvCbxslg) |
+| [One Workload to Rule Them All: Workload Aware Scheduling for Distributed AI Training on Kubernetes](events/kubecon/na-2026/talks/3O1MewPx8oA.md) | [YouTube](https://www.youtube.com/watch?v=3O1MewPx8oA) |
+| [The Latest in GPU, TPU, NIC and Other Device Support - WG Device Management](events/kubecon/na-2026/talks/ohw9hntgNCU.md) | [YouTube](https://www.youtube.com/watch?v=ohw9hntgNCU) |
+| [Deep Dive Into the DRA Driver for NVIDIA GPUs: What Works Today, What’s Coming and Why It Matters](events/kubecon/na-2026/talks/vYDpOV7IvEc.md) | [YouTube](https://www.youtube.com/watch?v=vYDpOV7IvEc) |
+| [Why Are You Still Wasting Whole GPUs? Hardware-Level Sharing, Scheduled with DRA](events/kubecon/na-2026/talks/qGvckRV9AwU.md) | [YouTube](https://www.youtube.com/watch?v=qGvckRV9AwU) |
+| [Beyond the Cluster Boundary: Sharing GPUs at Scale](events/kubecon/na-2026/talks/9EQCSHWCN6Y.md) | [YouTube](https://www.youtube.com/watch?v=9EQCSHWCN6Y) |
 
 <!-- summaries:end -->
 

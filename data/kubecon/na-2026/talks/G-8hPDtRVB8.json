@@ -1,0 +1,143 @@
+{
+  "video_id": "G-8hPDtRVB8",
+  "event": "kubecon/na-2026",
+  "title": "Kubernetes Solutions for Agent-Shaped Problems",
+  "speakers": [
+    {
+      "name": "Tim Hockin",
+      "org": "Google"
+    },
+    {
+      "name": "Dmitry Berkovich",
+      "org": "Google"
+    }
+  ],
+  "duration_s": 2304,
+  "youtube_url": "https://www.youtube.com/watch?v=G-8hPDtRVB8",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Kubernetes+Solutions+for+Agent-Shaped+Problems"
+  },
+  "tags": [
+    "agents",
+    "agent-sandboxing",
+    "kubernetes",
+    "snapshots",
+    "agent-security"
+  ],
+  "tldr": "Tim Hockin and Dmitry Berkovich explain why the obvious pod-per-agent-session pattern on Kubernetes gives slow starts and poor utilization, and how Agent Substrate fixes it with secure-by-default sandboxes, near-zero cost for idle agents and fast wake from layered snapshots. The long Q&A covers the policy enforcement point, snapshot invalidation and missing pieces such as autoscaling and automatic suspend.",
+  "key_points": [
+    {
+      "text": "Agent workloads are bursty (work for 100 ms to half a minute, then idle for hours), run untrusted generated code that needs full isolation, and have a human waiting for responses.",
+      "t": 60
+    },
+    {
+      "text": "Pod per session wastes requested resources while the user thinks, then destroys the pod on timeout and pays the slow sandbox start again on return.",
+      "t": 180
+    },
+    {
+      "text": "Teams that rolled their own ran many sandboxes inside large pods, then needed a control plane across nodes, effectively rebuilding Kubernetes.",
+      "t": 300
+    },
+    {
+      "text": "Three principles: security (no network by default, everything sandboxed, per-agent identity), density (idle agents cost about zero) and speed (wake feels like it never slept).",
+      "t": 360
+    },
+    {
+      "text": "Built on Kubernetes: workers are pods, the control plane and policy run in the cluster, and on node drain workers move their agents elsewhere.",
+      "t": 480
+    },
+    {
+      "text": "Concepts: actor (one session), actor template, worker (a pod hosting many actors), outlet (per-node manager handling images and snapshots), and ATE net with a router and an egress.",
+      "t": 540
+    },
+    {
+      "text": "Actors have no IP; the router finds the actor from the DNS name, holds the request while it resumes the actor, and the egress applies policy and injects credentials.",
+      "t": 660
+    },
+    {
+      "text": "Snapshots have layers: OCI image, a mandatory volume, root FS diffs and memory. Same image and machine type allows a full resume; a new image throws away memory and root FS for a cold start from the volume.",
+      "t": 720
+    },
+    {
+      "text": "Common pattern: a managed agent loop such as Gemini (brains) calls Substrate inside your own perimeter (hands), where work can be audited and stopped.",
+      "t": 900
+    },
+    {
+      "text": "The policy enforcement point is a plug-in: actor traffic is wrapped in HTTP CONNECT and sent to it; Envoy and Solo.io's agentgateway are the two implementations so far.",
+      "t": 1020
+    },
+    {
+      "text": "Suspend writes a local snapshot, then uploads it asynchronously; the scheduler prefers a node that still holds the latest copy. Only the durable directory is guaranteed to persist.",
+      "t": 1320
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Sandbox pod startups seen at 15 seconds, 30 seconds and up to a couple of minutes.",
+      "t": 180
+    },
+    {
+      "text": "Aspirational goals: billions of agents in one cluster, 10,000+ activations per second, wake in about 100 ms.",
+      "t": 420
+    },
+    {
+      "text": "In 1.0, snapshot upload to cloud storage starts after 5 minutes suspended.",
+      "t": 1380
+    },
+    {
+      "text": "Users have been in production since 0.2, released two months ago; the project has been built for about 6 months.",
+      "t": 1200
+    }
+  ],
+  "projects": [
+    "Agent Substrate",
+    "Kubernetes",
+    "gVisor",
+    "Cloud Hypervisor",
+    "Envoy",
+    "agentgateway",
+    "Gemini"
+  ],
+  "open_gaps": [
+    {
+      "text": "No good autoscaling story for worker pods and nodes; HPA on CPU and memory does not fit agents that sleep and wake often, so sizing is manual today.",
+      "t": 1140
+    },
+    {
+      "text": "Memory management is imperfect: no in-place resource updates, and a hostile workload can still exhaust memory.",
+      "t": 1320
+    },
+    {
+      "text": "Suspend is manual or harness-driven; detecting idleness automatically is unsolved, and self-suspend is coming.",
+      "t": 1440
+    },
+    {
+      "text": "Base image patches invalidate memory and root FS snapshots for every affected actor; merging overlays is an open question.",
+      "t": 1740
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "contribute",
+      "text": "Write a third policy enforcement point implementation for Substrate egress.",
+      "t": 1080
+    },
+    {
+      "type": "build",
+      "text": "Design autoscaling signals for Substrate worker pools from activation and suspend activity rather than CPU.",
+      "t": 1140
+    },
+    {
+      "type": "build",
+      "text": "Make your agent harness call suspend when a task finishes, and keep needed state in the durable directory.",
+      "t": 1440
+    },
+    {
+      "type": "learn",
+      "text": "The brains/hands split for running managed agent loops against compute inside your own security perimeter.",
+      "t": 900
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

@@ -54,10 +54,14 @@ def slides_link(ev: dict, title: str) -> dict:
 
 
 def speakers_from_title(title: str) -> list[dict]:
-    """'A, OrgA & B, OrgB' or 'A, OrgA, B, OrgB & C, OrgC'. Names only when orgs are missing."""
+    """'A, OrgA & B, OrgB', 'A, OrgA, B, OrgB & C, OrgC' or 'A & B, SharedOrg'. Names only when orgs are missing."""
     if " - " not in title:
         return []
-    items = [s.strip() for s in re.split(r",|\s&\s", title.rsplit(" - ", 1)[1]) if s.strip()]
+    tail = title.rsplit(" - ", 1)[1]
+    chunks = [c.strip() for c in tail.split(",")]
+    if len(chunks) == 2 and " & " in chunks[0]:
+        return [{"name": n.strip(), "org": chunks[1]} for n in chunks[0].split(" & ")]
+    items = [s.strip() for s in re.split(r",|\s&\s", tail) if s.strip()]
     if len(items) % 2:
         return [{"name": n} for n in items]
     return [{"name": items[i], "org": items[i + 1]} for i in range(0, len(items), 2)]

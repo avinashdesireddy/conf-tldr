@@ -1,0 +1,130 @@
+{
+  "video_id": "gDLFk6_To34",
+  "event": "kubecon/na-2026",
+  "title": "Running Secure Agents at Scale",
+  "speakers": [
+    {
+      "name": "Carlos Sanchez",
+      "org": "Adobe"
+    }
+  ],
+  "duration_s": 1796,
+  "youtube_url": "https://www.youtube.com/watch?v=gDLFk6_To34",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Running+Secure+Agents+at+Scale"
+  },
+  "tags": [
+    "agents",
+    "agent-sandbox",
+    "sandboxing",
+    "browser-automation",
+    "multi-tenancy"
+  ],
+  "tldr": "Adobe Experience Manager runs a few thousand single-tenant agents that import and redesign customer websites, each needing a sandboxed Playwright browser. After comparing Agent Sandbox, OpenShell, Substrate and others, Adobe chose Agent Sandbox with warm pools because its agents run long sessions rather than short bursts.",
+  "key_points": [
+    {
+      "text": "Customers chat with an agent that imports a site into the platform and edits its design, with a live preview; Adobe needs to run a few thousand of these agents.",
+      "t": 60
+    },
+    {
+      "text": "Design: one user per pod, because agents hold state and can write and run code; persistent storage for generated files; no credentials stored in the agent, since agents can be tricked into exfiltrating them.",
+      "t": 120
+    },
+    {
+      "text": "Pain points: read-write-once volumes cause downtime when a user's pod is replaced, large images (browsers, Playwright) slow cold starts, and idle agents waste resources.",
+      "t": 180
+    },
+    {
+      "text": "Playwright runs in its own sandbox, separate from the agent: Chromium is stateful and cannot be shared across users, and splitting lifecycles keeps the agent from paying the browser's startup cost when a chat does not need it.",
+      "t": 300
+    },
+    {
+      "text": "Options compared in a public repo: Agent Sandbox (warm pools, gVisor or Kata), OpenShell (built on Agent Sandbox, adds a supervisor for policy, DNS and credential injection), Substrate (own scheduler, suspend and resume with snapshots), and smaller projects.",
+      "t": 540
+    },
+    {
+      "text": "A Playwright proxy maps each caller to a browser sandbox by looking up the calling pod's labels from its source IP; labels are trusted because agents have no Kubernetes API access, while request contents could be faked.",
+      "t": 780
+    },
+    {
+      "text": "Agent Sandbox resources: SandboxTemplate (pod spec), warm pool (replica count per template), SandboxClaim (takes a sandbox from the pool) and Sandbox, all managed by its controller. Deleting the claim gives a fresh browser.",
+      "t": 960
+    },
+    {
+      "text": "Substrate was not chosen: it was early and has many moving parts, and its suspend/resume fits bursty, mostly idle agents, while Adobe's agents run for hours.",
+      "t": 1080
+    },
+    {
+      "text": "Selection guide: Agent Sandbox for fast assignment and simplicity, OpenShell for more policy and services around the agent, Substrate for bursty short-lived workloads; the speaker notes cloud providers appear to be converging on Substrate.",
+      "t": 1320
+    },
+    {
+      "text": "Production setup keeps a warm pool of three Playwright sandboxes; clients needed no code change, only a remote Playwright endpoint. Readiness means waiting until Chromium's ports are open.",
+      "t": 1440
+    },
+    {
+      "text": "Q&A: agent pods are Claude Code clients that call the LLM and use Playwright as a tool; the sandbox runtime is gVisor, which the speaker sees as the most supported.",
+      "t": 1680
+    }
+  ],
+  "numbers": [
+    {
+      "text": "A few thousand agents to run.",
+      "t": 0
+    },
+    {
+      "text": "Warm pool of three Playwright sandbox replicas kept running.",
+      "t": 1440
+    }
+  ],
+  "projects": [
+    "Agent Sandbox",
+    "OpenShell",
+    "Substrate",
+    "Playwright",
+    "Chromium",
+    "gVisor",
+    "Kata Containers",
+    "Claude Code",
+    "OpenClaw",
+    "Kubernetes"
+  ],
+  "open_gaps": [
+    {
+      "text": "Most volumes can only be mounted for writing by one pod, so replacing a user's pod causes downtime.",
+      "t": 240
+    },
+    {
+      "text": "Not everything Playwright offers is exposed through MCP yet, so Adobe also exposes WebSockets.",
+      "t": 360
+    },
+    {
+      "text": "Warm pools cost resources while idle sandboxes wait, and the sandboxing landscape is changing week to week.",
+      "t": 900
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Study the speaker's public repo that runs Playwright on each sandbox implementation and compares them.",
+      "t": 420
+    },
+    {
+      "type": "build",
+      "text": "Put heavy tools like browsers in their own warm-pooled sandboxes behind a proxy that assigns them by pod identity, not by request contents.",
+      "t": 1560
+    },
+    {
+      "type": "write",
+      "text": "Benchmark sandbox startup time and resource cost for long-running versus bursty agent workloads across Agent Sandbox, OpenShell and Substrate.",
+      "t": 1620
+    },
+    {
+      "type": "contribute",
+      "text": "Give feedback to Agent Sandbox on lifecycle and readiness handling for stateful tools like Chromium.",
+      "t": 1560
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

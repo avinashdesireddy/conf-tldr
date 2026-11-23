@@ -1,0 +1,172 @@
+{
+  "video_id": "kHbLvCbxslg",
+  "event": "kubecon/na-2026",
+  "title": "Many Clusters, One GPU Pool: Locality-Aware Scheduling and Data Delivery With Kueue and Dragonfly",
+  "speakers": [
+    {
+      "name": "Yiqing Wang",
+      "org": "Roblox"
+    },
+    {
+      "name": "Adam Buran",
+      "org": "Roblox"
+    }
+  ],
+  "duration_s": 1852,
+  "youtube_url": "https://www.youtube.com/watch?v=kHbLvCbxslg",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Many+Clusters%2C+One+GPU+Pool%3A+Locality-Aware+Scheduling+and+Data+Delivery+With+Kueue+and+Dragonfly"
+  },
+  "tags": [
+    "gpu-scheduling",
+    "multi-cluster",
+    "kueue",
+    "data-caching",
+    "training"
+  ],
+  "tldr": "Roblox joined five Kubernetes clusters across three AWS regions and its own data center into one GPU pool with MultiKueue, a custom external dispatcher and tiered quotas. Dragonfly P2P caching in each cluster turned repeated cross-region S3 reads into local and peer reads for training data and model weights.",
+  "key_points": [
+    {
+      "text": "Before: one cluster in us-east-1 with a YuniKorn-based scheduler; GPUs sat idle while reserved, jobs were interrupted often, and upgrades hit every training job at once.",
+      "t": 0
+    },
+    {
+      "text": "GPU capacity appeared in different regions with short windows to grab it, while training data stayed in S3 in us-east-1.",
+      "t": 60
+    },
+    {
+      "text": "They compared YuniKorn, Karmada and MultiKueue; Kueue already had tiers, borrowing and preemption, and MultiKueue extends them across clusters with an external dispatcher hook.",
+      "t": 180
+    },
+    {
+      "text": "Design principles: stay upstream, isolate cluster failures, users never pick a cluster, fail open if custom parts break, cloud-agnostic job specs.",
+      "t": 240
+    },
+    {
+      "text": "A hub cluster holds global quota and is the only submission point; jobs set GPU type, priority tier and data region labels, and each spoke's local Kueue checks real node capacity. The first spoke to admit runs the job.",
+      "t": 300
+    },
+    {
+      "text": "The external dispatcher ranks spokes: hard checks first (framework, GPU type, EFA/RDMA, volumes, full gang fit), then a time-limited preference for the data's region.",
+      "t": 420
+    },
+    {
+      "text": "Three tiers: guaranteed (owned quota), shared (borrowing idle GPUs) and opportunistic (spot); spokes put guaranteed and shared queues in one cohort so owners can reclaim borrowed GPUs.",
+      "t": 540
+    },
+    {
+      "text": "On-prem differences (own SKUs, SR-IOV RDMA, separate RDMA stripes, fixed racks) stay in spoke ResourceFlavors, so job specs remain cloud agnostic.",
+      "t": 600
+    },
+    {
+      "text": "Dragonfly caches S3 objects per cluster: each piece is read from the node's cache, a peer, a seed peer, then S3; if Dragonfly components fail, clients fall back to S3.",
+      "t": 840
+    },
+    {
+      "text": "A data mobility controller called Fairy pre-stages weights and checkpoints and moves volumes across AZs and regions with the CSI snapshot controller and Velero; they are experimenting with CRIU snapshots for faster LLM inference startup.",
+      "t": 1020
+    },
+    {
+      "text": "Q&A: cache keys are S3 URLs on dedicated NVMe; LIST and GET authorization always goes to S3, so pods without IAM access cannot read cached data.",
+      "t": 1320
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Five clusters across three AWS regions plus one on-prem data center; the hub serves about 500 team namespaces.",
+      "t": 360
+    },
+    {
+      "text": "Each spoke reports free GPU capacity to the hub every 30 seconds.",
+      "t": 360
+    },
+    {
+      "text": "The gang-fit check blocks about 5,000 partial fits a day.",
+      "t": 480
+    },
+    {
+      "text": "Data-region preference lasts 5 minutes; almost 9 in 10 jobs still run in their data region.",
+      "t": 480
+    },
+    {
+      "text": "80% more useful training work per reserved GPU hour, and 80% fewer job interruptions, versus the old single cluster.",
+      "t": 660
+    },
+    {
+      "text": "93% of bytes read were repeat reads; about 15 TB of hot data caused about 3.5 PB of repeat downloads; the top 10 datasets were half of all transfers.",
+      "t": 780
+    },
+    {
+      "text": "Dragonfly delivered over 9 PB since April: 50% from local cache, 43% from peers, 7% from S3.",
+      "t": 900
+    },
+    {
+      "text": "Model weight loads about 9x faster; a GLM 5 series model took about 23 minutes from S3 and under 3 minutes once cached.",
+      "t": 960
+    },
+    {
+      "text": "Over half of workloads now run outside us-east-1.",
+      "t": 1260
+    },
+    {
+      "text": "Cache TTL is one week on GPU nodes and two weeks on CPU peer nodes.",
+      "t": 1380
+    }
+  ],
+  "projects": [
+    "Kueue",
+    "MultiKueue",
+    "Dragonfly",
+    "KubeRay",
+    "Ray",
+    "Kubeflow",
+    "Apache YuniKorn",
+    "Karmada",
+    "Velero",
+    "CRIU",
+    "SkyPilot",
+    "Kubernetes"
+  ],
+  "open_gaps": [
+    {
+      "text": "MultiKueue requires identical hub and spoke specs, which breaks with mutating webhooks; they want matching on quota fields only.",
+      "t": 1080
+    },
+    {
+      "text": "Preemption happens per spoke with no global view, and RayJobs are not validated on the hub, so invalid jobs can hold quota.",
+      "t": 1140
+    },
+    {
+      "text": "No support for dynamic quota when capacity blocks expire every few weeks.",
+      "t": 1140
+    },
+    {
+      "text": "Dragonfly caching stays off spot nodes, still needs RDMA support, and lacks a declarative Kubernetes-style API.",
+      "t": 1200
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Use the MultiKueue external dispatcher API to add data-locality and capacity-aware spoke ranking with a fallback timeout.",
+      "t": 420
+    },
+    {
+      "type": "build",
+      "text": "Put Dragonfly in front of S3 for training data and model weights after checking access logs for repeat reads.",
+      "t": 780
+    },
+    {
+      "type": "contribute",
+      "text": "Help MultiKueue with spec matching under mutating webhooks, global preemption and dynamic quota.",
+      "t": 1080
+    },
+    {
+      "type": "contribute",
+      "text": "Add a declarative API and RDMA support to Dragonfly.",
+      "t": 1200
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

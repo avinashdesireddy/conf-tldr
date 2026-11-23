@@ -1,0 +1,142 @@
+{
+  "video_id": "3O1MewPx8oA",
+  "event": "kubecon/na-2026",
+  "title": "One Workload to Rule Them All: Workload Aware Scheduling for Distributed AI Training on Kubernetes",
+  "speakers": [
+    {
+      "name": "Andrey Velichkevich",
+      "org": "Apple"
+    }
+  ],
+  "duration_s": 2030,
+  "youtube_url": "https://www.youtube.com/watch?v=3O1MewPx8oA",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=One+Workload+to+Rule+Them+All%3A+Workload+Aware+Scheduling+for+Distributed+AI+Training+on+Kubernetes"
+  },
+  "tags": [
+    "gpu-scheduling",
+    "gang-scheduling",
+    "workload-aware-scheduling",
+    "topology-aware-scheduling",
+    "ai-training"
+  ],
+  "tldr": "Kubernetes now has Workload, PodGroup and composite PodGroup APIs so kube-scheduler can gang-schedule, preempt and place a whole distributed job instead of single pods. Kubeflow Trainer builds these into TrainJob runtimes so platform admins set gang and topology rules while scientists only write a training function.",
+  "key_points": [
+    {
+      "text": "Pod-by-pod scheduling deadlocks distributed jobs: two 8-GPU jobs on three 4-GPU nodes can each grab part of the capacity and neither starts.",
+      "t": 0
+    },
+    {
+      "text": "Other gaps: preempting one pod leaves the rest of the gang idle, launcher and worker roles are scheduled as unrelated pods, and placement ignores racks, slowing gradient sync.",
+      "t": 120
+    },
+    {
+      "text": "Kueue, KAI, Volcano, YuniKorn and the scheduler-plugins project all tackled gang scheduling; a new working group, started about a year ago at KubeCon Japan, aims for one common API.",
+      "t": 240
+    },
+    {
+      "text": "A PodGroup carries a scheduling policy (gang with a minimum count), topology constraints, a disruption mode and shared resource claims; the scheduler checks the whole group against a cluster snapshot before admitting it.",
+      "t": 300
+    },
+    {
+      "text": "Preemption has two modes upstream: single (evict one pod) and all (evict the whole pod group).",
+      "t": 360
+    },
+    {
+      "text": "Composite pod groups express hierarchy with a minimum group count, useful for multi-layer jobs and disaggregated prefill/decode inference.",
+      "t": 420
+    },
+    {
+      "text": "Kubeflow Trainer splits personas: admins define runtimes with zone/block/rack levels of scheduling policy; scientists call a Python SDK; JobSet and LeaderWorkerSet run underneath.",
+      "t": 600
+    },
+    {
+      "text": "The same scheduling fields are meant to appear in TrainJob, JobSet and LeaderWorkerSet so users get one experience across workload types.",
+      "t": 840
+    },
+    {
+      "text": "Kind demo: without gang scheduling a 5-pod job ran 4 pods and blocked a smaller job; with a gang policy the big job waited, the small one ran, and events named the unmet min count. A rack constraint kept each job in one rack.",
+      "t": 1140
+    },
+    {
+      "text": "TrainJob can report progress and ETA from framework callbacks; the speaker proposes using it for backfill and for preempting jobs that will finish later.",
+      "t": 1440
+    },
+    {
+      "text": "Kueue stays on top for quotas, cluster queues and multi-cluster; its topology-aware scheduling overlaps with the new upstream work and the two are being aligned.",
+      "t": 1860
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Workload and PodGroup APIs are beta in Kubernetes 1.37; composite pod groups are alpha with beta expected in 1.38 and GA hoped for 1.40.",
+      "t": 1320
+    },
+    {
+      "text": "Trainer integration with composite pod groups is planned for Trainer 2.5, about two months out.",
+      "t": 1380
+    },
+    {
+      "text": "Demo cluster: 4 nodes across 2 racks; the first job asked for 5 pods.",
+      "t": 960
+    }
+  ],
+  "projects": [
+    "Kubernetes",
+    "kube-scheduler",
+    "Workload API (pod groups)",
+    "Kubeflow",
+    "Kueue",
+    "Volcano",
+    "KAI Scheduler",
+    "LeaderWorkerSet",
+    "JobSet",
+    "Apache YuniKorn",
+    "Slurm",
+    "PyTorch",
+    "JAX",
+    "Dynamic Resource Allocation (DRA)"
+  ],
+  "open_gaps": [
+    {
+      "text": "Deep topology across multiple composite pod groups is slow for kube-scheduler; performance work is ongoing so 1,000 pods do not take an hour to schedule.",
+      "t": 1740
+    },
+    {
+      "text": "How Kueue's topology-aware scheduling hands off to the scheduler's own version is still being worked out, so the two will overlap for a while.",
+      "t": 1860
+    },
+    {
+      "text": "Topology is label-based only; health-aware topology (hardware degraded by heat or cooling failures) is an open issue.",
+      "t": 1920
+    },
+    {
+      "text": "Volcano maintainers are not yet engaged in the API design; the speaker asked them to join.",
+      "t": 1620
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Try the beta Workload and PodGroup APIs on a kind cluster with a gang policy and a rack constraint, as in the demo.",
+      "t": 1260
+    },
+    {
+      "type": "contribute",
+      "text": "Bring Volcano or other scheduler use cases to the workload-aware scheduling working group and Trainer calls.",
+      "t": 1620
+    },
+    {
+      "type": "build",
+      "text": "Prototype backfill or ETA-aware preemption using TrainJob's reported progress and ETA.",
+      "t": 1500
+    },
+    {
+      "type": "contribute",
+      "text": "Adopt the shared scheduling fields in your own workload controller so it composes pod groups like TrainJob and JobSet.",
+      "t": 840
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

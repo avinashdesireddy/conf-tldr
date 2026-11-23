@@ -1,0 +1,140 @@
+{
+  "video_id": "vYDpOV7IvEc",
+  "event": "kubecon/na-2026",
+  "title": "Deep Dive Into the DRA Driver for NVIDIA GPUs: What Works Today, What’s Coming and Why It Matters",
+  "speakers": [
+    {
+      "name": "Shiva Krishna Merla",
+      "org": "NVIDIA"
+    },
+    {
+      "name": "Varun Ramachandra Sekar US",
+      "org": "Nvidia"
+    }
+  ],
+  "duration_s": 1910,
+  "youtube_url": "https://www.youtube.com/watch?v=vYDpOV7IvEc",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Deep+Dive+Into+the+DRA+Driver+for+NVIDIA+GPUs%3A+What+Works+Today%2C+What%E2%80%99s+Coming+and+Why+It+Matters"
+  },
+  "tags": [
+    "gpu-scheduling",
+    "dra",
+    "nvidia-gpu",
+    "gpu-sharing",
+    "multi-node-nvlink"
+  ],
+  "tldr": "NVIDIA's DRA driver for GPUs already handles time-slicing, MPS, MIG, VM passthrough, health-based device taints and multi-node NVLink through compute domains. The next release adds cross-namespace GPU sharing, several compute-domain pods per node, an always-on IMEX daemon set and beta graduation of most driver features.",
+  "key_points": [
+    {
+      "text": "The driver has a GPU kubelet plugin, a compute-domain kubelet plugin and a compute-domain controller; it ships as a Helm chart, with features such as MIG and passthrough behind feature gates.",
+      "t": 0
+    },
+    {
+      "text": "GPU Operator adds a new GPUCluster API that deploys the DRA plugins, DCGM, the DCGM exporter and a validator; it drops the NVIDIA container runtime in favor of CDI and gives monitoring pods admin-access claims.",
+      "t": 120
+    },
+    {
+      "text": "The GPU Operator DRA mode does not support mixed clusters with the device plugin yet; migration support is planned for an upcoming release.",
+      "t": 180
+    },
+    {
+      "text": "Sharing today is user-mediated: pods share one ResourceClaim within a namespace. The next release adds system-mediated sharing across namespaces using consumable capacity, with admin-set share counts and no oversubscription.",
+      "t": 360
+    },
+    {
+      "text": "NVML health events become device taints so the scheduler avoids bad GPUs; next, the DRA resource health status API will show the XID error in pod status.",
+      "t": 480
+    },
+    {
+      "text": "KubeVirt VMs request a VFIO device class; the driver switches the GPU to the VFIO driver and the DRA downward API tells the VM launcher which GPU it got.",
+      "t": 540
+    },
+    {
+      "text": "Each GPU is published as both a container device and a VFIO device with the same PCI bus ID; allocating one hides the other, and the partitionable devices API will make this accounting native.",
+      "t": 720
+    },
+    {
+      "text": "Compute domains run IMEX for multi-node NVLink; today each node allows only channel 0 and one pod, which must take all four GPUs.",
+      "t": 1020
+    },
+    {
+      "text": "Next release: multiple compute-domain pods per node with unique channels, a ComputeDomainDaemonSet that keeps IMEX running ahead of workloads with clique-by-clique rolling updates, and NVLink between pods on one node, including HGX.",
+      "t": 1080
+    },
+    {
+      "text": "Demo: a device taint rule with NoExecute simulated an XID failure and the compute-domain workload moved to another node.",
+      "t": 1380
+    },
+    {
+      "text": "Migration: nvidia.com/gpu requests are turned into DRA claims for full GPUs and MIG (MIG needs a device class per profile); time-sliced and MPS requests cannot be translated yet.",
+      "t": 1620
+    }
+  ],
+  "numbers": [
+    {
+      "text": "KubeVirt 1.9 added beta support for DRA GPU resources.",
+      "t": 540
+    },
+    {
+      "text": "Demo node had four GB200 GPUs shared between VMs and pods.",
+      "t": 840
+    },
+    {
+      "text": "Most Kubernetes DRA feature gates the driver relies on moved to beta in 1.36.",
+      "t": 1560
+    }
+  ],
+  "projects": [
+    "NVIDIA DRA Driver for GPUs",
+    "NVIDIA GPU Operator",
+    "Dynamic Resource Allocation (DRA)",
+    "Kubernetes",
+    "KubeVirt",
+    "DCGM",
+    "Helm",
+    "DRANET"
+  ],
+  "open_gaps": [
+    {
+      "text": "Driver features for GPU sharing, health checking and passthrough are still alpha; beta is planned for the next release.",
+      "t": 1560
+    },
+    {
+      "text": "No straightforward migration from device-plugin time-slicing or MPS to DRA yet.",
+      "t": 1620
+    },
+    {
+      "text": "Bootstrapping IMEX daemons per workload adds latency at scale, which the daemon set is meant to fix.",
+      "t": 1080
+    },
+    {
+      "text": "vGPU support is coming next, with MIG-backed vGPU in a later release.",
+      "t": 1860
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "On Kubernetes 1.36 or later, try moving nvidia.com/gpu workloads to DRA via extended-resource translation, starting with full GPUs and MIG.",
+      "t": 1620
+    },
+    {
+      "type": "build",
+      "text": "Run VMs and containers on the same GPU nodes using the VFIO device class and KubeVirt.",
+      "t": 840
+    },
+    {
+      "type": "contribute",
+      "text": "Test the upcoming ComputeDomainDaemonSet and multi-pod compute domains and send feedback to the driver maintainers.",
+      "t": 1500
+    },
+    {
+      "type": "write",
+      "text": "Document topology alignment between the GPU DRA driver and DRANET or the SR-IOV DRA driver for RDMA setups.",
+      "t": 1800
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

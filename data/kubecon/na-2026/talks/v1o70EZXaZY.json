@@ -1,0 +1,157 @@
+{
+  "video_id": "v1o70EZXaZY",
+  "event": "kubecon/na-2026",
+  "title": "Reduce vLLM Pod Cold Starts with KServe Kernel Caching",
+  "speakers": [
+    {
+      "name": "Jooho Lee",
+      "org": "Red Hat"
+    },
+    {
+      "name": "Vishwa Hiren Gandhi",
+      "org": "Oracle"
+    }
+  ],
+  "duration_s": 1871,
+  "youtube_url": "https://www.youtube.com/watch?v=v1o70EZXaZY",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Reduce+vLLM+Pod+Cold+Starts+with+KServe+Kernel+Caching"
+  },
+  "tags": [
+    "ai-inference",
+    "cold-start",
+    "kserve",
+    "caching",
+    "supply-chain"
+  ],
+  "tldr": "Even with model weights cached, each new vLLM pod recompiles its GPU kernels. KServe now captures those compiled artifacts, publishes them as signed OCI images, and lets new pods reuse them, cutting compile time from about 35 seconds to about 1 second in their tests.",
+  "key_points": [
+    {
+      "text": "KServe turns a ServingRuntime and an InferenceService into a Deployment; a storage initializer downloads the model, then vLLM loads it and initializes before the pod is ready.",
+      "t": 120
+    },
+    {
+      "text": "vLLM startup steps: model loading, graph compilation, CUDA graph capture, and engine initialization (memory profiling, KV cache allocation).",
+      "t": 180
+    },
+    {
+      "text": "A new replica on another node does not inherit compiled artifacts and repeats every startup step. Model download can be avoided with KServe's local model cache; kernel compilation is the focus here.",
+      "t": 300
+    },
+    {
+      "text": "Compiling at runtime fits the code to the actual GPU architecture, tensor shapes, data types and vLLM/PyTorch/CUDA versions. vLLM already saves compiled artifacts to a cache directory, but ephemeral pod storage loses them.",
+      "t": 420
+    },
+    {
+      "text": "Shared NFS (ReadWriteMany) adds a storage dependency during burst scale-out, and node-local caches must be copied between nodes. Since the cache is executable code, its origin must be trusted.",
+      "t": 540
+    },
+    {
+      "text": "The approach: package compiled artifacts as an OCI image, push to a registry, sign it, verify the signature before reuse, and prefetch onto GPU nodes.",
+      "t": 600
+    },
+    {
+      "text": "This began as a separate GPU Kernel Manager (GKM) project using persistent volumes; in KServe it moved to OCI images for portability and signing. The feature is optional.",
+      "t": 660
+    },
+    {
+      "text": "Cache selection uses a workload footprint (workload, runtime image, model) and a compatibility footprint (data type, compile settings). It prefers the same workload, then a compatible one, else compiles and captures a new cache.",
+      "t": 780
+    },
+    {
+      "text": "vLLM logs confirmed the precompiled AOT artifacts were loaded, so the gain came from real cache reuse.",
+      "t": 1080
+    },
+    {
+      "text": "On a fresh GPU node, pulling the runtime image took longer than the rest of vLLM startup after cache reuse. Next idea: prefetch the runtime image and kernel cache onto new GPU nodes ahead of time (not yet measured end to end).",
+      "t": 1320
+    },
+    {
+      "text": "Q&A: unlike GPU snapshotting, this needs no special device or fast GPU-to-GPU network; it uses OCI images, registries and cosign with cert-manager, and works in disconnected clusters.",
+      "t": 1620
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Baseline vLLM startup is about 250 seconds, excluding image pull and model download.",
+      "t": 240
+    },
+    {
+      "text": "Model loading takes about 142 seconds (57%), compilation 35 seconds (14%), CUDA graph capture 12 seconds, 52 seconds of bootstrap and 9 seconds of API startup.",
+      "t": 300
+    },
+    {
+      "text": "Test setup: Qwen2.5 32B with AWQ quantization on an NVIDIA L40S GPU.",
+      "t": 900
+    },
+    {
+      "text": "Cache capture added no penalty: about 160 seconds versus 169 seconds for local model alone.",
+      "t": 1020
+    },
+    {
+      "text": "With cache reuse, startup dropped from 160 to 110 seconds and compile time from about 35 to 1.16 seconds, a 96% reduction.",
+      "t": 1080
+    },
+    {
+      "text": "Engine initialization dropped from about 55 to 18 seconds.",
+      "t": 1080
+    },
+    {
+      "text": "Full pod startup on a fresh GPU node was about 11 minutes standard and about 3 minutes with a local model; model loading to GPU still took 128 seconds.",
+      "t": 1260
+    },
+    {
+      "text": "Pulling the runtime image on a new GPU node took about 157 seconds.",
+      "t": 1320
+    }
+  ],
+  "projects": [
+    "KServe",
+    "vLLM",
+    "llm-d",
+    "LMCache",
+    "GPU Kernel Manager",
+    "PyTorch",
+    "cosign",
+    "cert-manager",
+    "Kubernetes"
+  ],
+  "open_gaps": [
+    {
+      "text": "Model loading into GPU memory remains the largest startup cost and is not addressed by kernel caching.",
+      "t": 360
+    },
+    {
+      "text": "Runtime image pull on new GPU nodes can exceed the remaining startup time; image prefetch is proposed but not measured end to end.",
+      "t": 1380
+    },
+    {
+      "text": "Changing compilation options invalidates the cached image, so the cache must be rebuilt.",
+      "t": 1560
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Measure your full cold start by stage (image pull, download, loading, compile, CUDA graphs) before choosing what to cache.",
+      "t": 1380
+    },
+    {
+      "type": "build",
+      "text": "Enable KServe kernel caching with signed OCI artifacts alongside local model caching for vLLM services that scale out often.",
+      "t": 720
+    },
+    {
+      "type": "build",
+      "text": "Prefetch runtime images and kernel caches onto new GPU nodes before pods are scheduled.",
+      "t": 1380
+    },
+    {
+      "type": "write",
+      "text": "Compare kernel caching with GPU snapshotting for cold starts, covering hardware requirements and trust.",
+      "t": 1620
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

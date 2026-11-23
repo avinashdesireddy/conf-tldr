@@ -1,0 +1,141 @@
+{
+  "video_id": "zrqy2rulX4M",
+  "event": "kubecon/na-2026",
+  "title": "The Seams Are the Trap: Agent Fleets from CNCF Parts You Already Have",
+  "speakers": [
+    {
+      "name": "Aleksander Slominski",
+      "org": "IBM"
+    },
+    {
+      "name": "Mariusz Sabath",
+      "org": "IBM"
+    }
+  ],
+  "duration_s": 1643,
+  "youtube_url": "https://www.youtube.com/watch?v=zrqy2rulX4M",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=The+Seams+Are+the+Trap%3A+Agent+Fleets+from+CNCF+Parts+You+Already+Have"
+  },
+  "tags": [
+    "agents",
+    "event-driven",
+    "autoscaling",
+    "audit",
+    "agent-security"
+  ],
+  "tldr": "IBM speakers built a headless agent fleet from existing CNCF parts: KEDA scales agent runners from Kafka lag, CloudEvents carry the tasks, and a small Python glue layer bridges HTTP and Kafka. Events are signed and kept in order, so the Kafka log doubles as a verifiable audit trail, while agent identity with SPIFFE/SPIRE is still unsolved.",
+  "key_points": [
+    {
+      "text": "Premise: instead of buying an agent platform, compose components many clusters already run (KEDA, Kafka via Strimzi, CloudEvents) and add only thin glue code.",
+      "t": 0
+    },
+    {
+      "text": "KEDA scales on consumer lag, the work left in a Kafka topic, so agent runners scale to zero when idle; cooldown settings stop scale-down from flapping.",
+      "t": 240
+    },
+    {
+      "text": "Their added parts: an event bridge that turns HTTP requests into Kafka events and Kafka events back into notifications, and event runners that consume tasks, start agents and publish agent output back to Kafka.",
+      "t": 360
+    },
+    {
+      "text": "Events are signed when the bridge accepts them; the runner checks the signature and that the agent may consume the event before it starts the agent.",
+      "t": 600
+    },
+    {
+      "text": "Kafka keeps the signed event sequence, so the log works as an audit trail that can show lost or injected events. The last event of a run, the terminal event, records the result.",
+      "t": 600
+    },
+    {
+      "text": "Kafka partitions keep events in order per consumer, which suits stateful, long-running agents that receive several inputs.",
+      "t": 840
+    },
+    {
+      "text": "Runs are labeled as groups so a batch of many agents produces one start and one finish notification instead of one per agent.",
+      "t": 1020
+    },
+    {
+      "text": "Demo: Claude Code in headless mode, using an event bridge skill, submits one task and then a batch of 100. Results arrive on a phone through ntfy with an HTML view of the run.",
+      "t": 1080
+    },
+    {
+      "text": "The audit tool verifies signatures and terminal events; an unsigned event injected directly into Kafka is rejected by the agent runner.",
+      "t": 1380
+    },
+    {
+      "text": "Everything is in Python, with specifications in their GitHub repo so it can be rebuilt in another language.",
+      "t": 540
+    },
+    {
+      "text": "Q&A: not an anti-vendor talk; the speaker expects pluggable library pieces on top of KEDA and Kafka rather than one sold platform.",
+      "t": 1560
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Demo batch of 100 agents across 12 Kafka partitions, with KEDA capped at 10 runner pods.",
+      "t": 1320
+    },
+    {
+      "text": "A single agent run produced 16 events, mostly internal Claude events.",
+      "t": 1200
+    },
+    {
+      "text": "The task lifecycle in the demo has seven steps, from submission to scale back to zero.",
+      "t": 720
+    },
+    {
+      "text": "Scaling back down after the batch took about two to three minutes.",
+      "t": 1380
+    }
+  ],
+  "projects": [
+    "KEDA",
+    "Apache Kafka",
+    "Strimzi",
+    "CloudEvents",
+    "SPIFFE",
+    "SPIRE",
+    "Kubernetes",
+    "Claude Code",
+    "ntfy"
+  ],
+  "open_gaps": [
+    {
+      "text": "SPIFFE/SPIRE ties identity to a pod, but an agent's identity shifts as it gains skills and plugins at runtime; they have only a simple workaround.",
+      "t": 660
+    },
+    {
+      "text": "Changing who may consume events is not dynamic: runners are scaled to zero and reconfigured.",
+      "t": 720
+    },
+    {
+      "text": "KEDA scale-up is not instant, so large batches wait while runners start.",
+      "t": 1260
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Put signed CloudEvents and signature checks in front of agents you trigger from a queue, and verify the event log as an audit trail.",
+      "t": 600
+    },
+    {
+      "type": "build",
+      "text": "Scale headless agent workers from queue lag with KEDA, including scale to zero.",
+      "t": 240
+    },
+    {
+      "type": "contribute",
+      "text": "Work on dynamic agent identity that reflects loaded skills and plugins, beyond pod-level SPIFFE IDs.",
+      "t": 660
+    },
+    {
+      "type": "learn",
+      "text": "Kafka partitions, consumer offsets and lag, and how they give ordering and crash recovery for agent tasks.",
+      "t": 960
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

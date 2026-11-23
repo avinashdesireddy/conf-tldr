@@ -1,0 +1,145 @@
+{
+  "video_id": "WPukEewRCOI",
+  "event": "kubecon/na-2026",
+  "title": "Beyond Model Serving: Running Production LLMs on Kubernetes with KServe",
+  "speakers": [
+    {
+      "name": "Johnu George",
+      "org": "Nutanix"
+    },
+    {
+      "name": "Jooho lee",
+      "org": "Red Hat"
+    }
+  ],
+  "duration_s": 1708,
+  "youtube_url": "https://www.youtube.com/watch?v=WPukEewRCOI",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Beyond+Model+Serving%3A+Running+Production+LLMs+on+Kubernetes+with+KServe"
+  },
+  "tags": [
+    "ai-inference",
+    "kserve",
+    "disaggregated-serving",
+    "autoscaling",
+    "routing"
+  ],
+  "tldr": "KServe maintainers explain LLMInferenceService, a separate API from InferenceService that wraps llm-d, vLLM and Gateway API Inference Extension routing so one resource can describe single-node, multi-node and prefill/decode-disaggregated deployments. They then walk through production patterns: cache-aware routing, timeouts, queue-based autoscaling, cold-start reduction, rollouts and LoRA adapters.",
+  "key_points": [
+    {
+      "text": "LLMs differ from predictive models: they generate tokens over time, hold GPU memory for KV cache, and run long requests, so scheduling, scaling and load balancing need rethinking.",
+      "t": 60
+    },
+    {
+      "text": "KServe integrates llm-d rather than building an inference engine, and has to keep up with llm-d's fast release pace without bloating its API.",
+      "t": 120
+    },
+    {
+      "text": "LLMInferenceService has a workload controller (single node, multi-node, separate prefill pool) and a route controller (scheduler and Gateway API resources); it is kept separate so InferenceService stays simple.",
+      "t": 240
+    },
+    {
+      "text": "One YAML sets model source (Hugging Face, S3, PVC or OCI), tensor/data parallelism, an optional independently scaled prefill pool, and router, gateway and scheduler settings; KServe creates the rest from presets.",
+      "t": 420
+    },
+    {
+      "text": "The endpoint picker (EPP, the llm-d scheduler) picks a replica using prefix cache match, queue depth and KV cache usage, built on Gateway API Inference Extension; users can plug in a custom EPP.",
+      "t": 540
+    },
+    {
+      "text": "For streaming, route timeouts must exceed generation time and each hop's timeout must exceed the next one, or clients retry and pile more load on GPUs.",
+      "t": 780
+    },
+    {
+      "text": "Disaggregated prefill/decode gives consistent TTFT and TPOT at high concurrency and allows different GPU types per phase; very large models use multi-node with LeaderWorkerSet, tensor parallelism within a node and pipeline parallelism across nodes.",
+      "t": 840
+    },
+    {
+      "text": "Autoscale on the engine's waiting-queue length: GPU utilization reads near 100% with only a few requests because it is a time-share metric, and KV cache utilization sits at a medium baseline.",
+      "t": 960
+    },
+    {
+      "text": "Cold start: a local model cache, plus container snapshot and restore (CRI-O, NVIDIA Dynamo), cuts startup from tens of minutes to seconds. A shared KV pool keeps TTFT low for new versions during canary rollouts.",
+      "t": 1020
+    },
+    {
+      "text": "Multiple LoRA adapters on one shared base vLLM model are selected per request and save GPU memory.",
+      "t": 1200
+    },
+    {
+      "text": "Q&A: KV cache offloading (LMCache, Dynamo, vLLM connectors) is transparent to KServe; the llm-d router must know where blocks are offloaded to route well.",
+      "t": 1560
+    }
+  ],
+  "numbers": [
+    {
+      "text": "llm-d went from v0.4 in November 2025 to v1.0 the month before the talk.",
+      "t": 180
+    },
+    {
+      "text": "Pipeline parallelism example: two nodes with eight GPUs each.",
+      "t": 900
+    },
+    {
+      "text": "Snapshot/restore cuts cold start from tens of minutes to a few seconds.",
+      "t": 1080
+    },
+    {
+      "text": "Aggregated serving can show P99 at 2-3x baseline versus disaggregated.",
+      "t": 1440
+    }
+  ],
+  "projects": [
+    "KServe",
+    "llm-d",
+    "vLLM",
+    "SGLang",
+    "Gateway API",
+    "Gateway API Inference Extension",
+    "LeaderWorkerSet",
+    "Ray",
+    "NVIDIA Dynamo",
+    "LMCache",
+    "CRI-O",
+    "agentgateway",
+    "Kubernetes"
+  ],
+  "open_gaps": [
+    {
+      "text": "Next focus is agentic workloads: routing by request type and complexity with llm-d, and SLAs per workload class.",
+      "t": 1320
+    },
+    {
+      "text": "Fast cold start does not solve rollout traffic: new versions have no KV cache unless a shared KV pool is added.",
+      "t": 1140
+    },
+    {
+      "text": "Dashboards hide queueing; end-to-end latency can look flat while TTFT and TPOT degrade.",
+      "t": 1200
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Autoscale vLLM replicas in KServe on waiting-queue length instead of GPU utilization.",
+      "t": 1020
+    },
+    {
+      "type": "build",
+      "text": "Audit timeouts from client through load balancer, AI gateway and EPP so each exceeds the one downstream.",
+      "t": 1260
+    },
+    {
+      "type": "learn",
+      "text": "Start with aggregated LLMInferenceService, then move to prefill/decode disaggregation, then multi-node LeaderWorkerSet as scale grows.",
+      "t": 1260
+    },
+    {
+      "type": "contribute",
+      "text": "Help KServe with agentic-workload routing and per-workload SLAs on top of llm-d.",
+      "t": 1320
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

@@ -1,0 +1,150 @@
+{
+  "video_id": "_njXLk28JT0",
+  "event": "kubecon/na-2026",
+  "title": "Quota Isn't Enough: Topology Aware Scheduling on Modern GPU Clusters",
+  "speakers": [
+    {
+      "name": "Amy Chen",
+      "org": "CoreWeave"
+    },
+    {
+      "name": "JJ Jordan",
+      "org": "Cohere"
+    }
+  ],
+  "duration_s": 2114,
+  "youtube_url": "https://www.youtube.com/watch?v=_njXLk28JT0",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Quota+Isn%27t+Enough%3A+Topology+Aware+Scheduling+on+Modern+GPU+Clusters"
+  },
+  "tags": [
+    "gpu-scheduling",
+    "topology-aware-scheduling",
+    "kueue",
+    "training",
+    "fragmentation"
+  ],
+  "tldr": "On NVL72 racks the NVLink domain is the whole rack, and leaving it drops bandwidth 18x, so having GPU quota no longer means a job will run fast or start at all. The speakers explain Kueue Topology Aware Scheduling and production lessons on test pods, slice sizing, node hot swap, preemption tickets, fragmentation and hero workloads.",
+  "key_points": [
+    {
+      "text": "A training collective runs at the speed of its slowest link; with NVL72, staying inside a rack keeps all traffic on NVLink, while the default scheduler and quota never ask where pods land.",
+      "t": 0
+    },
+    {
+      "text": "Placing 9 GPUs on one rack and 7 on another makes every all-reduce round cross the network, though quota and scheduling look identical to Kubernetes.",
+      "t": 240
+    },
+    {
+      "text": "Training wants powers of two, so jobs use 64 of each rack's 72 GPUs; without telling Kueue 64 is the unit, a 128-GPU job can land as 72 + 56.",
+      "t": 360
+    },
+    {
+      "text": "TAS config: the platform declares a Topology (e.g. fabric, superpod, leaf group, NVLink domain, node) on a ResourceFlavor; users add one pod-template annotation; Kueue checks quota and shape at admission and pins pods with node selectors.",
+      "t": 480
+    },
+    {
+      "text": "CoreWeave's idle-node verification pods blocked customer jobs once TAS counted them; fix was no Kueue queue label, the unconstrained topology annotation, and priority -1 so kube-scheduler preempts them.",
+      "t": 600
+    },
+    {
+      "text": "Multi-rack jobs need a slice size (16 nodes of 4 GPUs = 64 GPUs per rack) for balanced placement; jagged allocations hurt speed and have triggered XLA crashes.",
+      "t": 720
+    },
+    {
+      "text": "Annotation modes: unconstrained (inference, single-node), preferred (best effort, may land unbalanced, for post-training), required (wait for the right shape, for pre-training).",
+      "t": 780
+    },
+    {
+      "text": "Node hot swap via the TAS failed-node-replacement feature gate replaces one pinned node within the same topology instead of re-queuing the whole job. Kueue only sees taints, set at CoreWeave by Node Problem Detector and verification tests.",
+      "t": 960
+    },
+    {
+      "text": "Preemption tickets: Kueue preempts only if the pending job would fit after evictions, so quota math alone misleads users.",
+      "t": 1140
+    },
+    {
+      "text": "Fragmentation: job departures leave holes that do not align with racks; best-fit, least-capacity and balanced placement only slow the decay, since nothing moves running work.",
+      "t": 1200
+    },
+    {
+      "text": "Cohere fills spare rack nodes with preemptible inference via cohorts with quota borrowing, keeping hot spares for the largest jobs. For hero jobs, CoreWeave built a stop-gap rack-clearing controller; upstream Kueue now has configurable preemption that treats topology plus priority as a reason to preempt.",
+      "t": 1440
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Bandwidths: memory 8 TB/s, NVLink 5 900 GB/s, host 450 GB/s, PCIe 64 GB/s, InfiniBand across racks 50 GB/s.",
+      "t": 120
+    },
+    {
+      "text": "In-rack bandwidth is 18x faster than between racks on NVL72; on H100 the off-node drop was about 4.5x.",
+      "t": 300
+    },
+    {
+      "text": "About $18,000 per day for one rack at published on-demand CoreWeave pricing.",
+      "t": 300
+    },
+    {
+      "text": "NCCL all-reduce, 8 GB messages on four GB200 nodes: 908 GB/s bus bandwidth within a single rack.",
+      "t": 360
+    },
+    {
+      "text": "Racks are delivered once 16 of 18 nodes are healthy; 64 of 72 GPUs are promised, 8 are failure allowance.",
+      "t": 420
+    },
+    {
+      "text": "Hero workload example: 1,000 GPUs at highest priority.",
+      "t": 1500
+    }
+  ],
+  "projects": [
+    "Kueue",
+    "Kubernetes",
+    "kube-scheduler",
+    "NCCL",
+    "Node Problem Detector",
+    "XLA"
+  ],
+  "open_gaps": [
+    {
+      "text": "Nothing in the system can defragment running work; admission policies only slow fragmentation.",
+      "t": 1380
+    },
+    {
+      "text": "Kueue only understands taints, so faults that pass every automated check (some NVLink degradation) put pods back on the same bad node repeatedly.",
+      "t": 1080
+    },
+    {
+      "text": "Kueue picks nodes and kube-scheduler places pods, so they can race; moving topology into kube-scheduler via workload-aware scheduling is future work.",
+      "t": 1740
+    },
+    {
+      "text": "Configurable preemption moves preemption to a global level, so who may defragment must be tightly controlled; wider defragmentation needs more work.",
+      "t": 1800
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Set required topology with slice sizes for pre-training jobs and preferred for post-training on rack-scale GPU clusters.",
+      "t": 840
+    },
+    {
+      "type": "build",
+      "text": "Wire GPU health signals (XID errors, NVLink faults, failed NCCL tests) into node taints so Kueue's failed-node replacement can act.",
+      "t": 1020
+    },
+    {
+      "type": "contribute",
+      "text": "Work on Kueue defragmentation and moving topology awareness into kube-scheduler.",
+      "t": 1740
+    },
+    {
+      "type": "write",
+      "text": "Build a dashboard that shows topology-aware free capacity per rack, not just quota, to answer 'why is my job pending'.",
+      "t": 1140
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

@@ -1,0 +1,137 @@
+{
+  "video_id": "SerQWvNyI0M",
+  "event": "kubecon/na-2026",
+  "title": "AI Gateways in Practice: Model Routing, Inference Scheduling, and MCP on Kubernetes",
+  "speakers": [
+    {
+      "name": "Yuke Ning",
+      "org": "Alibaba Cloud"
+    }
+  ],
+  "duration_s": 1709,
+  "youtube_url": "https://www.youtube.com/watch?v=SerQWvNyI0M",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=AI+Gateways+in+Practice%3A+Model+Routing%2C+Inference+Scheduling%2C+and+MCP+on+Kubernetes"
+  },
+  "tags": [
+    "ai-inference",
+    "ai-gateway",
+    "gateway-api",
+    "mcp",
+    "routing"
+  ],
+  "tldr": "Using the Higress gateway, the talk walks through three AI traffic paths on Kubernetes: hosted model providers with fallback, self-hosted models behind Gateway API Inference Extension pools, and agent tool calls over MCP. It compares an endpoint picker embedded in the gateway with an external EPP such as llm-d's, including how each behaves on failure.",
+  "key_points": [
+    {
+      "text": "Higress, a CNCF sandbox gateway built on Envoy and Istio, puts provider calls, self-hosted inference and MCP tools behind one entry point with shared security, quota and observability, but each path needs a different routing decision.",
+      "t": 0
+    },
+    {
+      "text": "For hosted models, a model router plugin copies the model field from the JSON body to a header for normal route matching; an AI route maps it to weighted providers, and an AI proxy translates protocols, injects API keys and rewrites model names.",
+      "t": 180
+    },
+    {
+      "text": "Provider fallback lives on the AI route: on 4xx/5xx responses Envoy does an internal redirect to a backup provider and model, and a response header shows that fallback happened. The decision is per request and keeps no state.",
+      "t": 300
+    },
+    {
+      "text": "API key failover is a separate mechanism inside one provider: a failing key leaves rotation after a threshold and returns after a health check or cooldown, with state kept per gateway pod.",
+      "t": 360
+    },
+    {
+      "text": "Fallback cannot redirect a streaming response once a 200 has started, 429 and 503 usually need different reactions, and fallback models differ in context window and quality, so map them deliberately.",
+      "t": 420
+    },
+    {
+      "text": "Self-hosted replicas are not interchangeable: queue depth, KV cache use, prefix cache locality and loaded LoRA adapters matter more than connection counts. An HTTPRoute points at an InferencePool, which references an endpoint picker (EPP).",
+      "t": 480
+    },
+    {
+      "text": "Higress creates a headless Service per InferencePool and sends request attributes and candidates to the EPP over Envoy external processing; on retries it reports the pod that actually served the response so the picker's view stays accurate.",
+      "t": 660
+    },
+    {
+      "text": "Embedded option: an AI load balancer Wasm plugin scores pods from per-host metrics (ported from the upstream inference extension scheduler), with Redis for shared state; if it fails, normal service load balancing applies.",
+      "t": 780
+    },
+    {
+      "text": "External option: an EPP per pool, such as the llm-d inference scheduler, runs filter and scorer plugins and adds prefix-cache-aware routing, prefill/decode disaggregation and latency prediction, at the cost of one more component and a gRPC round trip per request.",
+      "t": 900
+    },
+    {
+      "text": "Rule of thumb: embedded picker for small pools with simple traffic; external EPP for large pools, when KV cache reuse matters, or when several gateways need the same scheduling. The choice is per route. Fail-close is the default; fail-open favors availability.",
+      "t": 1080
+    },
+    {
+      "text": "For MCP, the gateway can expose REST APIs as MCP tools via request templates (credentials injected, never seen by the agent), proxy existing MCP servers with auth and rate limits, and bridge clients and servers on different MCP transport versions.",
+      "t": 1320
+    }
+  ],
+  "numbers": [
+    {
+      "text": "The AI proxy supports 38 provider types.",
+      "t": 240
+    },
+    {
+      "text": "Higress passes the Gateway API v1.6.0 HTTP profile core tests with no failures or skips; the report was accepted upstream.",
+      "t": 1260
+    },
+    {
+      "text": "All 12 core tests of the Inference Extension v1.4.0 gateway profile pass; this report is published by the project, not submitted upstream.",
+      "t": 1260
+    }
+  ],
+  "projects": [
+    "Higress",
+    "Envoy",
+    "Istio",
+    "Gateway API",
+    "Gateway API Inference Extension",
+    "llm-d",
+    "vLLM",
+    "Redis",
+    "Model Context Protocol"
+  ],
+  "open_gaps": [
+    {
+      "text": "When every pod is saturated no picker can create capacity; queueing, admission control, gateway rate limits or autoscaling are still needed.",
+      "t": 1140
+    },
+    {
+      "text": "The Inference Extension conformance report has not been submitted upstream, so it is a project report, not an upstream result.",
+      "t": 1260
+    },
+    {
+      "text": "MCP's HTTP transport has changed several times in two years, so clients and servers on different versions need bridging.",
+      "t": 1380
+    },
+    {
+      "text": "The speaker asks for feedback on EPP behavior under real model load and on what breaks during MCP migration.",
+      "t": 1680
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Set up provider fallback with separate rules for 429 and 503, and expose fallback rate in per-route and per-model metrics.",
+      "t": 420
+    },
+    {
+      "type": "learn",
+      "text": "Run both an embedded picker and an external EPP on the same gateway and compare them per route, including fail-open versus fail-close.",
+      "t": 1080
+    },
+    {
+      "type": "build",
+      "text": "Expose an existing REST API as MCP tools through gateway templates instead of writing a separate MCP server.",
+      "t": 1440
+    },
+    {
+      "type": "contribute",
+      "text": "Share EPP behavior data under real load and MCP migration issues with the Higress project.",
+      "t": 1680
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

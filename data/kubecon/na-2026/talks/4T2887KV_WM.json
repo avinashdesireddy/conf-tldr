@@ -1,0 +1,143 @@
+{
+  "video_id": "4T2887KV_WM",
+  "event": "kubecon/na-2026",
+  "title": "Observability for LLM Inference on Kubernetes",
+  "speakers": [
+    {
+      "name": "Oscar Castillo",
+      "org": "Genius Sports"
+    },
+    {
+      "name": "Jeffry Hernández",
+      "org": "Wizeline"
+    }
+  ],
+  "duration_s": 1475,
+  "youtube_url": "https://www.youtube.com/watch?v=4T2887KV_WM",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Observability+for+LLM+Inference+on+Kubernetes"
+  },
+  "tags": [
+    "ai-inference",
+    "observability",
+    "opentelemetry",
+    "gpu-metrics"
+  ],
+  "tldr": "With frontier APIs you only see the client side, but self-hosting on Kubernetes lets you observe every layer from the GPU up to the user response. The speakers instrument an OCR app on KServe, vLLM and llm-d with OpenTelemetry and correlate metrics, traces and logs in Grafana to find wasted tokens and misleading GPU utilization.",
+  "key_points": [
+    {
+      "text": "Inference has a prefill stage and an iterative decode stage, which give the two core metrics: time to first token and time per output token.",
+      "t": 60
+    },
+    {
+      "text": "With frontier model APIs you can instrument your app with OpenTelemetry GenAI traces, but not model internals, GPU use or KV cache, and provider features change over time.",
+      "t": 180
+    },
+    {
+      "text": "Provider-reported TTFT differed from client-measured TTFT because of network hops and client processing.",
+      "t": 300
+    },
+    {
+      "text": "With a local model capped at four parallel requests, extra requests show up as deferred, which is what a slow chat response feels like.",
+      "t": 420
+    },
+    {
+      "text": "Demo app: passport OCR using an open-weights Qwen 9B vision model on one Kubernetes GPU node with KServe and vLLM, llm-d routing and Envoy Gateway in front.",
+      "t": 600
+    },
+    {
+      "text": "Signals span five layers: application, routing (scheduler latency), inference server (TTFT, KV cache), hardware (GPU) and Kubernetes (vLLM startup, scheduling, unhealthy events).",
+      "t": 660
+    },
+    {
+      "text": "DCGM dashboards show a GPU at 100% utilization while KV cache was only 20% busy, so GPU utilization alone misleads.",
+      "t": 840
+    },
+    {
+      "text": "OpenTelemetry traces cover model loading in vLLM and full request paths, including a failed span whose cause was an empty model response.",
+      "t": 960
+    },
+    {
+      "text": "The OpenTelemetry Collector sends signals to Prometheus, Tempo and Loki; correlation uses exemplars, trace ID queries, span metrics and the GenAI semantic conventions.",
+      "t": 1140
+    },
+    {
+      "text": "Findings: thinking mode wasted tokens for the vision model without improving answers, and batching many requests at once saved cost and energy.",
+      "t": 1260
+    }
+  ],
+  "numbers": [
+    {
+      "text": "OpenAI test script: 5 requests, about 100 tokens per second throughput.",
+      "t": 240
+    },
+    {
+      "text": "Provider dashboard showed 600 ms TTFT while the client measured about 1.5 seconds.",
+      "t": 300
+    },
+    {
+      "text": "Local model configured for 4 parallel requests; GPU utilization near 90% under load.",
+      "t": 480
+    },
+    {
+      "text": "GPU at 100% utilization with KV cache only 20% busy.",
+      "t": 840
+    },
+    {
+      "text": "Compared 1 request versus 24 requests at once for cost and energy.",
+      "t": 1260
+    }
+  ],
+  "projects": [
+    "OpenTelemetry",
+    "Kubernetes",
+    "KServe",
+    "vLLM",
+    "llm-d",
+    "Envoy Gateway",
+    "NVIDIA DCGM",
+    "Prometheus",
+    "Grafana",
+    "Tempo",
+    "Loki",
+    "Dash0"
+  ],
+  "open_gaps": [
+    {
+      "text": "Hosted frontier APIs hide model internals, GPU and KV cache behavior from users.",
+      "t": 180
+    },
+    {
+      "text": "On neo-cloud GPUs you do not own the hardware, so power and energy data is not accurate.",
+      "t": 840
+    },
+    {
+      "text": "The OpenTelemetry GenAI semantic conventions are still in development.",
+      "t": 1140
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Build a GPU dashboard that shows KV cache usage next to DCGM utilization so busy-but-idle GPUs stand out.",
+      "t": 840
+    },
+    {
+      "type": "learn",
+      "text": "Use OpenTelemetry exemplars and span metrics to jump from a latency spike to the trace and the endpoint picker logs.",
+      "t": 1200
+    },
+    {
+      "type": "build",
+      "text": "Measure token use with thinking mode on and off for your workload before enabling it.",
+      "t": 1260
+    },
+    {
+      "type": "learn",
+      "text": "Compare client-measured TTFT with provider-reported TTFT to size network and client overhead.",
+      "t": 300
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

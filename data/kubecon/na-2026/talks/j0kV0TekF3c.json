@@ -1,0 +1,158 @@
+{
+  "video_id": "j0kV0TekF3c",
+  "event": "kubecon/na-2026",
+  "title": "Zero-Gap GPU Execution: Building Secure, Pre-Warmed Pod Runtimes for High-Velocity AI Agents",
+  "speakers": [
+    {
+      "name": "Ankit Goyal",
+      "org": "LinkedIn"
+    },
+    {
+      "name": "Cong Gu",
+      "org": "LinkedIn"
+    }
+  ],
+  "duration_s": 1905,
+  "youtube_url": "https://www.youtube.com/watch?v=j0kV0TekF3c",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Zero-Gap+GPU+Execution%3A+Building+Secure%2C+Pre-Warmed+Pod+Runtimes+for+High-Velocity+AI+Agents"
+  },
+  "tags": [
+    "agents",
+    "gpu-scheduling",
+    "warm-pools",
+    "sandboxing",
+    "volcano"
+  ],
+  "tldr": "LinkedIn built Firepool, a broker that keeps warm GPU pods ready so agents and RL loops running on CPU nodes can launch GPU jobs without Kubernetes pod startup in the critical path. Its zero-gap mode uses HAMi and Volcano to park standby pods on a busy GPU so the next job takes over the card the moment the current one ends.",
+  "key_points": [
+    {
+      "text": "Motivating workloads: Autopilot (an agent migrating TensorFlow models to PyTorch for tens of hours), an auto-research agent running experiments for days, and agentic RL rollouts. All need GPUs repeatedly but not continuously.",
+      "t": 0
+    },
+    {
+      "text": "Running agents on GPU nodes wastes GPUs while they think; running them on CPU nodes and launching a GPU pod per step pays a cold start every iteration.",
+      "t": 240
+    },
+    {
+      "text": "The Firepool broker has a REST API, job store and pool controller for capacity, plus a dispatcher, in-memory pod tracker and executors; each pod runs a lightweight Firepool agent that fetches and runs the job code.",
+      "t": 420
+    },
+    {
+      "text": "The API is built for agents: submit returns a job ID immediately, unknown fields are rejected to block hallucinated input, retries stay under one job ID, and failures return a specific error class and exit code.",
+      "t": 540
+    },
+    {
+      "text": "Pod selection order: the caller's own idle pod, then a never-used idle pod, then a standby on a busy GPU, and only last a new pod. Claiming happens in one step under one lock; multi-pod jobs claim all pods at once, gang-style.",
+      "t": 600
+    },
+    {
+      "text": "Pods start with a shared base image (CUDA, framework); user code, extra Python packages and distributed rank/addresses arrive with the job, so one pool serves many environments.",
+      "t": 780
+    },
+    {
+      "text": "Safe reuse rules: verified reset of the process tree, code and shared memory (else delete the pod), owner-only reuse, and a reuse tag that marks a pod for retirement when a different tag lands on it.",
+      "t": 840
+    },
+    {
+      "text": "Pools are sized from the job queue, not GPU utilization, with four knobs: floor, ceiling, idle wait time, and idle pods kept after that. Firepool can borrow idle GPUs from other teams and return them on demand.",
+      "t": 960
+    },
+    {
+      "text": "Zero gap uses HAMi only for scheduling multiple pods per GPU (no partitioning or time sharing); one pod runs a job with the full card while standby pods wait to be promoted.",
+      "t": 1140
+    },
+    {
+      "text": "Sandboxing: pods have no egress by default; all outbound traffic goes through a sidecar proxy that holds the credentials, injects them and checks policy. A checkpoint daemon persists agent state, and shared memory lets agent instances share learnings.",
+      "t": 1320
+    },
+    {
+      "text": "Q&A: Firepool only uses spare capacity and does not run production training; fragmentation is handled with fixed GPU SKU types and custom Volcano bin-packing plugins.",
+      "t": 1560
+    }
+  ],
+  "numbers": [
+    {
+      "text": "New GPU pod cold start with cached image: 20-30 seconds; uncached image: 2-10 minutes.",
+      "t": 300
+    },
+    {
+      "text": "Binding a job to a warm pod takes under half a second.",
+      "t": 780
+    },
+    {
+      "text": "Median handover time with a different reuse tag per job dropped from 51 seconds to under a second.",
+      "t": 1260
+    },
+    {
+      "text": "A new GPU pod takes about 22 seconds to run its first instruction; on a warm pod job code starts in about a second.",
+      "t": 1440
+    },
+    {
+      "text": "In an H200 benchmark, an agent loop went from 26 minutes to 2.",
+      "t": 1440
+    },
+    {
+      "text": "19 of 20 pod requests in production are served from warm pods (standbys included).",
+      "t": 1440
+    },
+    {
+      "text": "Auto-research agent runs have lasted 7 days.",
+      "t": 180
+    },
+    {
+      "text": "Autopilot cut TensorFlow-to-PyTorch migration time per model from months to about a week.",
+      "t": 1620
+    }
+  ],
+  "projects": [
+    "Firepool",
+    "Volcano",
+    "HAMi",
+    "Kubernetes",
+    "PyTorch",
+    "TensorFlow"
+  ],
+  "open_gaps": [
+    {
+      "text": "Standby pods with different container images on the same GPU are not supported yet; it is the next step, aimed at many RL environments on a small GPU budget.",
+      "t": 1260
+    },
+    {
+      "text": "When the cluster is full, plain warm pools cannot grow and jobs wait for capacity again; agents now mostly wait on quota rather than cold start.",
+      "t": 1020
+    },
+    {
+      "text": "Pod reuse is not a security boundary: state outside tracked writable paths is handled by read-only pods and opt-out, not full isolation.",
+      "t": 1800
+    },
+    {
+      "text": "Firepool is not open source yet; the team plans to release it.",
+      "t": 1500
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Add a warm-pod broker in front of GPU jobs for agent loops, sized from queue depth with floor and ceiling knobs.",
+      "t": 960
+    },
+    {
+      "type": "build",
+      "text": "Use HAMi scheduling slots with Volcano to park standby pods on busy GPUs and cut handover gaps between tenants.",
+      "t": 1140
+    },
+    {
+      "type": "contribute",
+      "text": "Follow Firepool's planned open-source release and help with multi-image standby support.",
+      "t": 1500
+    },
+    {
+      "type": "learn",
+      "text": "Sidecar credential injection with no-egress pods as a pattern for running untrusted agent code.",
+      "t": 1320
+    }
+  ],
+  "prompt_version": "extract-v1"
+}

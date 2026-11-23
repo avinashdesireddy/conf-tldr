@@ -1,0 +1,141 @@
+{
+  "video_id": "ohw9hntgNCU",
+  "event": "kubecon/na-2026",
+  "title": "The Latest in GPU, TPU, NIC and Other Device Support - WG Device Management",
+  "speakers": [
+    {
+      "name": "John Belamaric",
+      "org": "Google"
+    },
+    {
+      "name": "Morten Jæger Torkildsen",
+      "org": "Google"
+    }
+  ],
+  "duration_s": 1839,
+  "youtube_url": "https://www.youtube.com/watch?v=ohw9hntgNCU",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=The+Latest+in+GPU%2C+TPU%2C+NIC+and+Other+Device+Support+-+WG+Device+Management"
+  },
+  "tags": [
+    "gpu-scheduling",
+    "dra",
+    "device-management",
+    "kubernetes-core"
+  ],
+  "tldr": "WG Device Management reviewed what Dynamic Resource Allocation (DRA) shipped in Kubernetes 1.37 and what is landing in 1.38, from device taints and extended-resource compatibility to partitionable devices and CPU allocation through DRA. Next up are DRA preemption, gang-aware preemption, richer hardware models and attaching GPUs to running pods.",
+  "key_points": [
+    {
+      "text": "Device plugins expose an opaque integer count; the working group formed after KubeCon EU 2024 because AI ASICs, RDMA NICs and CXL memory need richer modeling.",
+      "t": 60
+    },
+    {
+      "text": "DRA has four parts: ResourceSlice to describe devices, ResourceClaim to request them (including under-specified asks like any GPU with 20 GB), the scheduler match, and the kubelet/driver setup.",
+      "t": 180
+    },
+    {
+      "text": "ResourceSlice is aimed at vendors, ResourceClaim at users and DeviceClass at admins, who can inject policy without changing user manifests.",
+      "t": 660
+    },
+    {
+      "text": "1.37: extended resource requests let admins move to DRA drivers while users keep asking for nvidia.com/gpu-style resources.",
+      "t": 360
+    },
+    {
+      "text": "1.37: device taints mark a single failing accelerator instead of tainting the whole node and stranding healthy devices.",
+      "t": 420
+    },
+    {
+      "text": "1.37 began DRA integration with workload-aware scheduling: resource claims attach to a pod group, plus faster scheduling of many DRA pods at once.",
+      "t": 480
+    },
+    {
+      "text": "1.38: partitionable devices (main case NVIDIA MIG), consumable capacity (for example sharing NIC bandwidth), and binding conditions that wait for slow fabric-attached devices and can reschedule on failure.",
+      "t": 540
+    },
+    {
+      "text": "Node allocatable resources via DRA (beta in 1.38) let CPU, memory and hugepages be allocated in a claim and aligned with the NIC and GPU, with the scheduler avoiding double counting against the container spec.",
+      "t": 780
+    },
+    {
+      "text": "With workload-aware scheduling, a claim per pod-group replica can allocate a compute domain or TPU slice and clean it up when the replica scales down.",
+      "t": 1020
+    },
+    {
+      "text": "Adoption needs vendors to ship drivers and ecosystem projects to consume DRA; Karpenter, Cluster Autoscaler and KubeVirt are integrating.",
+      "t": 1080
+    },
+    {
+      "text": "The DRA plugin is a default kube-scheduler plugin; most new DRA features have a scheduling component.",
+      "t": 1740
+    }
+  ],
+  "numbers": [
+    {
+      "text": "DRA went GA in Kubernetes 1.34; since 1.36 two to three DRA features graduate to GA each release.",
+      "t": 120
+    },
+    {
+      "text": "About 20 active features are tracked by the working group at any time.",
+      "t": 300
+    },
+    {
+      "text": "Placing a NIC and GPU on the same PCIe root can give about 10x the IO performance between them.",
+      "t": 720
+    }
+  ],
+  "projects": [
+    "Kubernetes",
+    "Dynamic Resource Allocation (DRA)",
+    "kube-scheduler",
+    "Workload API (pod groups)",
+    "LeaderWorkerSet",
+    "Kueue",
+    "Karpenter",
+    "Cluster Autoscaler",
+    "KubeVirt",
+    "HAMi"
+  ],
+  "open_gaps": [
+    {
+      "text": "DRA does not yet support preemption; an alpha is targeted for 1.38, and gang-level (workload-aware) preemption comes later.",
+      "t": 1140
+    },
+    {
+      "text": "Attaching and detaching GPUs on running pods (in-place mutability) is early, possibly alpha in 1.39.",
+      "t": 1200
+    },
+    {
+      "text": "Components that make their own scheduling decisions, like Kueue and autoscalers, must understand DRA's programmable scheduling; shared importable libraries are being built.",
+      "t": 1620
+    },
+    {
+      "text": "No public fractional TPU sharing yet.",
+      "t": 1440
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Follow the working group's live feature tracking sheet and weekly meetings (EU- and US-friendly times).",
+      "t": 1260
+    },
+    {
+      "type": "build",
+      "text": "Use a DeviceClass with extended resources to move a cluster to a DRA driver without changing user manifests.",
+      "t": 420
+    },
+    {
+      "type": "contribute",
+      "text": "Help autoscalers and admission controllers support newer DRA features such as partitionable devices.",
+      "t": 1680
+    },
+    {
+      "type": "build",
+      "text": "Try DRA for non-traditional resources, such as locally cached models or NVMe access, as discussed in Q&A.",
+      "t": 1380
+    }
+  ],
+  "prompt_version": "extract-v1"
+}
