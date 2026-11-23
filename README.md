@@ -8,7 +8,7 @@ Short, timestamp-linked summaries of conference talks. Each one has key points, 
 
 ### KubeCon + CloudNativeCon North America 2026
 
-#### Inference (2/20 summarized)
+#### Inference (3/20 summarized)
 
 | Talk | Video |
 |---|---|
@@ -18,7 +18,7 @@ Short, timestamp-linked summaries of conference talks. Each one has key points, 
 | Cache Me If You Can: LLM Inference with llm-d (with fun drawings) | [YouTube](https://www.youtube.com/watch?v=ixmKvIejJv4) |
 | DisaggregatedSet Meets Multi-EPP… | [YouTube](https://www.youtube.com/watch?v=pVKqTxIDZcw) |
 | Inside the Inference Load Balancer: Proxy/Controller Patterns for… | [YouTube](https://www.youtube.com/watch?v=wNJVJ8PhFO0) |
-| Composing Inference on Kubernetes: Gateway… | [YouTube](https://www.youtube.com/watch?v=02tyAmdoleQ) |
+| [Composing Inference on Kubernetes: Gateway, Schedule, Serve, Observe](events/kubecon/na-2026/talks/02tyAmdoleQ.md) | [YouTube](https://www.youtube.com/watch?v=02tyAmdoleQ) |
 | New Traffic, New Rules: Standardizing AI-Aware… | [YouTube](https://www.youtube.com/watch?v=kwJTUGK4FPM) |
 | AI Gateways in Practice: Model Routing, Inference Scheduling, and MCP… | [YouTube](https://www.youtube.com/watch?v=SerQWvNyI0M) |
 | From Proxy to Platform: Building a Multi-Tenant AI Gateway | [YouTube](https://www.youtube.com/watch?v=YaEXW7f9Dr0) |
