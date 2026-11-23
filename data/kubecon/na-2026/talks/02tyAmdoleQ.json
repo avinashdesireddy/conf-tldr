@@ -1,0 +1,143 @@
+{
+  "video_id": "02tyAmdoleQ",
+  "event": "kubecon/na-2026",
+  "title": "Composing Inference on Kubernetes: Gateway, Schedule, Serve, Observe",
+  "speakers": [
+    {
+      "name": "Karena Angell",
+      "org": "Red Hat"
+    },
+    {
+      "name": "Alex Chircop",
+      "org": "Google"
+    }
+  ],
+  "duration_s": 1803,
+  "youtube_url": "https://www.youtube.com/watch?v=02tyAmdoleQ",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=Composing+Inference+on+Kubernetes%3A+Gateway%2C+Schedule%2C+Serve%2C+Observe"
+  },
+  "tags": [
+    "ai-inference",
+    "platform-engineering",
+    "gateway-api",
+    "observability",
+    "composability"
+  ],
+  "tldr": "Production inference should be built from open, swappable layers: accelerators, scheduling, gateway, serving and observability. The test is whether you can swap one layer, such as vLLM for SGLang or one endpoint picker for another, without the others noticing.",
+  "key_points": [
+    {
+      "text": "Inference is too often a closed vertical: one gateway, one serving image, one observability silo.",
+      "t": 0
+    },
+    {
+      "text": "Composability has six lenses: workload, control flow, resource, information, human-agent and architectural.",
+      "t": 60
+    },
+    {
+      "text": "Workloads nest (a model call inside RAG inside an agent inside a business workflow); separate platforms per type duplicate routing, scheduling and telemetry.",
+      "t": 120
+    },
+    {
+      "text": "On shared clusters the model endpoint becomes everyone's dependency with no isolation or back pressure, and nobody can tell where tail latency was spent.",
+      "t": 180
+    },
+    {
+      "text": "Layer model: Kubernetes control plane, accelerators via DRA, then gateway, scheduler and serving, all wrapped in observability.",
+      "t": 240
+    },
+    {
+      "text": "A fixed DAG gives predictable latency and token spend; autonomous agents trade that for flexibility.",
+      "t": 420
+    },
+    {
+      "text": "Admission (Kueue, Volcano, KAI Scheduler) decides whether pods can exist; the endpoint picker decides which replica serves this prompt now. They are different jobs.",
+      "t": 840
+    },
+    {
+      "text": "Because the picker sits behind the Gateway API, pickers and gateways (llm-d, the GIE reference picker, Envoy Gateway, agentgateway, kgateway, Istio) can be swapped without client changes.",
+      "t": 900
+    },
+    {
+      "text": "Carry knowledge, context, state and provenance across hops with OpenTelemetry GenAI semantic conventions and W3C traceparent; Kepler adds GPU energy.",
+      "t": 960
+    },
+    {
+      "text": "Serving boundary test: when TGI went into maintenance, teams behind a clean gateway contract swapped engines quickly. If swapping vLLM for SGLang breaks routing, auth or dashboards, the serving layer is doing platform work.",
+      "t": 1080
+    },
+    {
+      "text": "Agents need security isolation, durable state and fast suspend/resume; agent-substrate, OpenShell and gVisor each cover part of that.",
+      "t": 1200
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Lab demo: five traffic shapes (warm-cache chat, agent tool bursts, multi-tenant traffic, queued batch) on one cluster without re-platforming.",
+      "t": 600
+    }
+  ],
+  "projects": [
+    "Kubernetes",
+    "llm-d",
+    "Gateway API",
+    "Gateway API Inference Extension",
+    "Kueue",
+    "Volcano",
+    "KAI Scheduler",
+    "HAMi",
+    "KubeRay",
+    "KEDA",
+    "KServe",
+    "vLLM",
+    "SGLang",
+    "Triton Inference Server",
+    "OpenTelemetry",
+    "Prometheus",
+    "Kepler",
+    "gVisor",
+    "agentgateway",
+    "kgateway",
+    "Istio",
+    "Jaeger"
+  ],
+  "open_gaps": [
+    {
+      "text": "Teams disagree on what words like 'cached' or 'completed' mean, so traces line up syntactically but not semantically.",
+      "t": 1020
+    },
+    {
+      "text": "Idle agent pods waiting on the model or a human waste cluster memory and risk losing state.",
+      "t": 1260
+    },
+    {
+      "text": "Autonomous control flow makes spend and termination hard to predict.",
+      "t": 420
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Run the swap test on your platform: change the serving engine and check that routing, auth and dashboards survive.",
+      "t": 1140
+    },
+    {
+      "type": "build",
+      "text": "Propagate W3C traceparent with OpenTelemetry GenAI spans from gateway to picker to model for per-request cost attribution.",
+      "t": 1020
+    },
+    {
+      "type": "write",
+      "text": "Turn the talk's 'diagnose by boundary' checklist into a troubleshooting guide.",
+      "t": 1380
+    },
+    {
+      "type": "learn",
+      "text": "Learn where Kueue-style admission ends and endpoint-picker routing begins.",
+      "t": 840
+    }
+  ],
+  "generated_by": "claude-opus-5-5 (agent-written in session, not the Bedrock pipeline)",
+  "prompt_version": "extract-v1"
+}
