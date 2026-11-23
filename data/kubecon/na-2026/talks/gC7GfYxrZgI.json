@@ -1,0 +1,141 @@
+{
+  "video_id": "gC7GfYxrZgI",
+  "event": "kubecon/na-2026",
+  "title": "From GPU to Fleet. The llm-d KV Cache Hierarchy",
+  "speakers": [
+    {
+      "name": "Vita Bortnikov",
+      "org": "IBM Research"
+    },
+    {
+      "name": "Nishtha Jain",
+      "org": "Google"
+    }
+  ],
+  "duration_s": 1336,
+  "youtube_url": "https://www.youtube.com/watch?v=gC7GfYxrZgI",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=From+GPU+to+Fleet.+The+llm-d+KV+Cache+Hierarchy"
+  },
+  "tags": [
+    "ai-inference",
+    "llm-d",
+    "vllm",
+    "kv-cache",
+    "storage"
+  ],
+  "tldr": "Agent traffic is long input and short output, so reusing KV cache matters more than raw GPU speed. llm-d and vLLM now tier KV cache from GPU to CPU to shared storage and route requests to where the cache already lives.",
+  "key_points": [
+    {
+      "text": "Agentic workloads read far more than they write; KV cache reuse can reach 95%.",
+      "t": 120
+    },
+    {
+      "text": "Tiering is upstream: vLLM ships an offloading connector (GPU to CPU to storage, CPU as the core tier) and a storage connector; llm-d owns orchestration and eviction.",
+      "t": 240
+    },
+    {
+      "text": "Peer-to-peer KV transfer pulls a prefix from a busy pod to a free one, and also powers prefill/decode disaggregation.",
+      "t": 360
+    },
+    {
+      "text": "Three tiers: GPU HBM (hottest, smallest), CPU DRAM plus local NVMe (about 2 TB), and shared network storage such as Lustre or IBM Storage Scale.",
+      "t": 660
+    },
+    {
+      "text": "Plain NFS volumes do not scale for this; parallel file systems give the throughput needed.",
+      "t": 780
+    },
+    {
+      "text": "Storage offloading without storage-aware routing fails at scale: requests land on pods that do not hold the cache.",
+      "t": 1140
+    },
+    {
+      "text": "Setup: an RWX PVC, pinned CPU memory and the offloading connector on vLLM (SGLang also supported), plus KV events and endpoint-picker config in the llm-d router.",
+      "t": 1200
+    }
+  ],
+  "numbers": [
+    {
+      "text": "An 80 GB GPU leaves about 15 GB for KV cache after model weights and buffers.",
+      "t": 540
+    },
+    {
+      "text": "Over 50% TCO savings and about 60% fewer GPU hours with external storage attached.",
+      "t": 840
+    },
+    {
+      "text": "About 40% better time to first token and 30% more QPS with the hybrid setup.",
+      "t": 900
+    },
+    {
+      "text": "Llama 70B at 128k tokens: reading KV from network storage is about 10x faster than recomputing.",
+      "t": 960
+    },
+    {
+      "text": "Speedup over recompute: HBM about 40x, DRAM about 21x, network storage about 10x.",
+      "t": 1020
+    },
+    {
+      "text": "Replayed Claude Code traces, 50 to 800 users: GPU-only saturates past 100 users; GPU+CPU hits a cliff near 300; GPU+CPU+storage stays flat above 2,500 output tok/s up to 800 users.",
+      "t": 1080
+    },
+    {
+      "text": "Turning off the storage index in the router dropped throughput from about 2,500 to 700 tok/s at 800 users.",
+      "t": 1140
+    },
+    {
+      "text": "About 1.2 billion KV tokens written to storage in the run.",
+      "t": 1140
+    }
+  ],
+  "projects": [
+    "llm-d",
+    "vLLM",
+    "SGLang",
+    "Lustre",
+    "IBM Storage Scale",
+    "NIXL",
+    "Mooncake",
+    "Prometheus"
+  ],
+  "open_gaps": [
+    {
+      "text": "Writing a new KV connector in vLLM used to be very hard; the new offloading connector is meant to make it pluggable, and more connectors are wanted.",
+      "t": 300
+    },
+    {
+      "text": "KV footprint keeps growing with context length (up to a million tokens), so capacity planning across tiers is an ongoing problem.",
+      "t": 540
+    },
+    {
+      "text": "The speakers ask for more contributions to the guides and to the KV Cache SIG.",
+      "t": 1320
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "build",
+      "text": "Reproduce the GPU-only vs GPU+CPU vs GPU+CPU+storage curve on a managed Kubernetes service with a shared file system (for example FSx for Lustre) and publish the guide.",
+      "t": 1080
+    },
+    {
+      "type": "contribute",
+      "text": "Add a storage backend to the vLLM offloading connector or an llm-d well-lit-path guide for another cloud's parallel file system.",
+      "t": 1200
+    },
+    {
+      "type": "write",
+      "text": "Explain 'storage offloading needs storage-aware routing' with the 2,500 vs 700 tok/s result as the hook.",
+      "t": 1140
+    },
+    {
+      "type": "learn",
+      "text": "Join the llm-d KV Cache SIG to follow tiering and P2P work.",
+      "t": 1320
+    }
+  ],
+  "generated_by": "claude-opus-5-5 (agent-written in session, not the Bedrock pipeline)",
+  "prompt_version": "extract-v1"
+}

@@ -1,0 +1,17 @@
+{
+  "llm-d": "https://github.com/llm-d/llm-d",
+  "vLLM": "https://github.com/vllm-project/vllm",
+  "SGLang": "https://github.com/sgl-project/sglang",
+  "Lustre": "https://www.lustre.org/",
+  "NIXL": "https://github.com/ai-dynamo/nixl",
+  "Mooncake": "https://github.com/kvcache-ai/Mooncake",
+  "Prometheus": "https://github.com/prometheus/prometheus",
+  "NVIDIA Dynamo": "https://github.com/ai-dynamo/dynamo",
+  "Kubernetes": "https://github.com/kubernetes/kubernetes",
+  "kube-scheduler": "https://github.com/kubernetes/kubernetes/tree/master/pkg/scheduler",
+  "Kueue": "https://github.com/kubernetes-sigs/kueue",
+  "Ray": "https://github.com/ray-project/ray",
+  "KubeRay": "https://github.com/ray-project/kuberay",
+  "Kubeflow": "https://github.com/kubeflow/kubeflow",
+  "Workload API (pod groups)": "https://github.com/kubernetes/enhancements/tree/master/keps/sig-scheduling/4671-gang-scheduling"
+}

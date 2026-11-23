@@ -1,0 +1,144 @@
+{
+  "video_id": "t-r-my2ngZ8",
+  "event": "kubecon/na-2026",
+  "title": "The Scheduling Stack: Real-World Lessons from Anthropic, Anyscale, Google, and CERN",
+  "speakers": [
+    {
+      "name": "Wojciech Tyczyński",
+      "org": "Google"
+    },
+    {
+      "name": "Ricardo Rocha",
+      "org": "CERN"
+    },
+    {
+      "name": "Kaslin Fields",
+      "org": "Google"
+    },
+    {
+      "name": "Decheng Dai",
+      "org": "Anthropic"
+    },
+    {
+      "name": "Jui-An Huang",
+      "org": "Anyscale"
+    }
+  ],
+  "duration_s": 2029,
+  "youtube_url": "https://www.youtube.com/watch?v=t-r-my2ngZ8",
+  "slides": {
+    "status": "search",
+    "url": "https://kccncna2026.sched.com/search?q=The+Scheduling+Stack%3A+Real-World+Lessons+from+Anthropic%2C+Anyscale%2C+Google%2C+and+CERN"
+  },
+  "tags": [
+    "scheduling",
+    "ai-training",
+    "multi-cluster",
+    "fragmentation",
+    "kubernetes-core"
+  ],
+  "tldr": "Big AI users still outgrow the default Kubernetes scheduler, so upstream is turning the scheduling stack into pluggable parts. The hard problems now are fragmentation, multi-cluster onboarding and failures, not raw node count.",
+  "key_points": [
+    {
+      "text": "Anthropic ran the default kube-scheduler for three years with node selectors and scheduling gates, then built its own about two years ago when gang and topology needs outgrew it.",
+      "t": 240
+    },
+    {
+      "text": "Anyscale is excited about pod groups and the new Workload API; RL post-training mixes training, inference and data processing in one job.",
+      "t": 300
+    },
+    {
+      "text": "Google's view: the scheduler is a framework with sane defaults for most users, and every layer (placement, queueing such as Kueue, hardware programming like GPU compute domains or TPU slices, autoscaling) should be replaceable on its own.",
+      "t": 540
+    },
+    {
+      "text": "CERN runs multi-cluster for capacity, not scale: any team or HPC site that hands over a Kubernetes API endpoint gets onboarded, including GPUs 100 m underground at ALICE.",
+      "t": 840
+    },
+    {
+      "text": "At Anthropic, cross-cluster pain is above Kubernetes: namespaces, service accounts, RBAC and data locality in each cluster.",
+      "t": 1020
+    },
+    {
+      "text": "The real limit is workload count and churn, not nodes. Keep one tightly coupled workload in one cluster; use many clusters for many workloads.",
+      "t": 1140
+    },
+    {
+      "text": "Fragmentation: Anyscale mixes high-priority training with preemptible batch; Anthropic blocks fragmentation at placement and runs a background defrag job. No silver bullet.",
+      "t": 1380
+    },
+    {
+      "text": "Small workloads that do not fill a node or GPU need attention; CERN published a CNCF reference architecture for it.",
+      "t": 1680
+    },
+    {
+      "text": "Multi-layer schedulers (Ray on Kubernetes) need better vertical building blocks; the API server and etcd watch path adds latency no fast scheduler can remove.",
+      "t": 1920
+    }
+  ],
+  "numbers": [
+    {
+      "text": "Anthropic and Google pushed one cluster to 65,000 nodes.",
+      "t": 1020
+    },
+    {
+      "text": "CERN runs 5,000-node clusters.",
+      "t": 840
+    },
+    {
+      "text": "Minor scheduler and component tuning for sub-node workloads gave CERN about 30% better performance.",
+      "t": 1680
+    }
+  ],
+  "projects": [
+    "Kubernetes",
+    "kube-scheduler",
+    "Kueue",
+    "Ray",
+    "KubeRay",
+    "Kubeflow",
+    "Workload API (pod groups)"
+  ],
+  "open_gaps": [
+    {
+      "text": "The default scheduler still does not meet frontier-lab needs; pluggability is 'not there yet'.",
+      "t": 600
+    },
+    {
+      "text": "Kubernetes was designed for single-cluster scheduling; multi-cluster needs extra layers each user builds.",
+      "t": 960
+    },
+    {
+      "text": "Generic checkpoint and restore for non-ML, long-running scientific jobs is still being worked out.",
+      "t": 1620
+    },
+    {
+      "text": "No standard building blocks to integrate application schedulers (Ray) with Kubernetes scheduling.",
+      "t": 1920
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "learn",
+      "text": "Follow the Workload API / pod groups work in SIG Scheduling; it is the upstream answer to gang scheduling.",
+      "t": 300
+    },
+    {
+      "type": "build",
+      "text": "Show priority plus preemptible batch sharing one GPU pool (for example with Kueue and Karpenter) and measure cost saved.",
+      "t": 1380
+    },
+    {
+      "type": "write",
+      "text": "Compare in-placement anti-fragmentation rules vs background defrag for GPU clusters, using this panel's two approaches.",
+      "t": 1440
+    },
+    {
+      "type": "contribute",
+      "text": "Apply CERN's sub-node scheduling reference architecture on another platform and report the result back.",
+      "t": 1680
+    }
+  ],
+  "generated_by": "claude-opus-5-5 (agent-written in session, not the Bedrock pipeline)",
+  "prompt_version": "extract-v1"
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Talk insight",
+  "type": "object",
+  "required": ["video_id", "event", "title", "speakers", "youtube_url", "slides", "tldr", "key_points", "projects", "open_gaps", "opportunities", "generated_by"],
+  "properties": {
+    "video_id": {"type": "string"},
+    "event": {"type": "string"},
+    "title": {"type": "string"},
+    "speakers": {"type": "array", "items": {"type": "object", "required": ["name"], "properties": {"name": {"type": "string"}, "org": {"type": "string"}}}},
+    "duration_s": {"type": "integer"},
+    "youtube_url": {"type": "string"},
+    "slides": {
+      "type": "object",
+      "required": ["status", "url"],
+      "properties": {
+        "status": {"enum": ["direct", "search", "none"]},
+        "url": {"type": ["string", "null"]}
+      }
+    },
+    "tags": {"type": "array", "items": {"type": "string"}},
+    "tldr": {"type": "string"},
+    "key_points": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/cited"}},
+    "numbers": {"type": "array", "items": {"$ref": "#/$defs/cited"}},
+    "projects": {"type": "array", "items": {"type": "string"}},
+    "open_gaps": {"type": "array", "items": {"$ref": "#/$defs/cited"}},
+    "opportunities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "text", "t"],
+        "properties": {
+          "type": {"enum": ["contribute", "build", "write", "learn"]},
+          "text": {"type": "string"},
+          "t": {"type": "integer"}
+        }
+      }
+    },
+    "generated_by": {"type": "string"},
+    "prompt_version": {"type": "string"}
+  },
+  "$defs": {
+    "cited": {
+      "type": "object",
+      "required": ["text", "t"],
+      "properties": {
+        "text": {"type": "string"},
+        "t": {"type": "integer", "description": "seconds into the video"}
+      }
+    }
+  }
+}

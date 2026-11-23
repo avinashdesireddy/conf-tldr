@@ -1,0 +1,11 @@
+{
+  "name": "KubeCon + CloudNativeCon North America 2026",
+  "series": "KubeCon + CloudNativeCon",
+  "playlists": ["https://www.youtube.com/playlist?list=PLTr_Dw92PnXU"],
+  "sched_host": "kccncna2026.sched.com",
+  "tracks": {
+    "main": "Main conference",
+    "unassigned": "Track not yet assigned"
+  },
+  "track_of": {}
+}
