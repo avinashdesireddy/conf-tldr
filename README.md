@@ -84,6 +84,28 @@ Short, timestamp-linked summaries of conference talks. Each one has key points, 
 
 <!-- summaries:end -->
 
+## Ask your AI agent
+
+Every summary is available over MCP through [GitMCP](https://gitmcp.io/avinashdesireddy/conf-tldr). There is nothing to install and no token. Add this to your client's MCP config:
+
+```json
+{
+  "mcpServers": {
+    "conf-tldr": {
+      "url": "https://gitmcp.io/avinashdesireddy/conf-tldr"
+    }
+  }
+}
+```
+
+For clients that only run local commands, use `"command": "npx", "args": ["mcp-remote", "https://gitmcp.io/avinashdesireddy/conf-tldr"]`.
+
+Then ask things like:
+
+- "Which conf-tldr talks cover KV cache routing, and what numbers did they give?"
+- "Compare how the agentic talks handle sandboxing."
+- "List the open gaps that came up across the inference talks."
+
 ## Use the data
 
 Every talk is also in `data/<series>/<edition>/talks.jsonl`, one JSON object per line. See [`schema/talk.schema.json`](schema/talk.schema.json).
