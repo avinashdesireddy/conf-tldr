@@ -1,8 +1,23 @@
 # conf-tldr
 
-**The conference talks worth knowing, in 5-minute summaries you can read or ask your AI agent about.**
+**Read conference talk summaries or ask your AI agent about them. Then jump to the exact moment in the video.**
 
 Conferences post far more talks than anyone has time to watch. conf-tldr picks the AI talks that matter and summarizes each one.
+
+## Why it exists
+
+- **Saves time:** a few minutes of reading instead of a full video
+- **Agent-ready:** your AI agent can search every talk at once
+- **Checkable:** each point links to its moment in the video
+
+| Who | Use |
+|---|---|
+| Engineers | See how others solved problems like KV cache routing |
+| Architects | Compare ideas across talks before picking a design |
+| Customer-facing roles | Pull real numbers and examples for calls |
+| Leaders | Spot which ideas keep coming up |
+| Writers & speakers | Find sources for posts, talks and docs |
+| Missed the event | Catch up on just your topics |
 
 Each summary has:
 
