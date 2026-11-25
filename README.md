@@ -1,6 +1,8 @@
 # conf-tldr
 
-Conferences post far more talks than anyone has time to watch. conf-tldr is a short list of the AI talks worth knowing about, each turned into a summary you can read in a few minutes, or query from your AI agent.
+**The conference talks worth knowing, in 5-minute summaries you can read or ask your AI agent about.**
+
+Conferences post far more talks than anyone has time to watch. conf-tldr picks the AI talks that matter and summarizes each one.
 
 Each summary has:
 
