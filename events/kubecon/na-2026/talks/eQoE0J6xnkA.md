@@ -1,4 +1,4 @@
-# Demystifying Upgrades for Stateful, Dormant AI Agents: Unleashing Seamless Updates in Dynamic Sand
+# Demystifying Upgrades for Stateful, Dormant AI Agents: Unleashing Seamless Updates in Dynamic Sandboxes
 
 **Event:** KubeCon + CloudNativeCon North America 2026 · Track not yet assigned  
 **Speakers:** Zhang Zhen (Alibaba Group)  

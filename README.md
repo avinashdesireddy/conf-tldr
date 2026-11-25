@@ -1,17 +1,8 @@
 # conf-tldr
 
-**The conference talks worth knowing, in 5-minute summaries you can read or ask your AI agent about.**
+**Read conference talk summaries or ask your AI agent about them. Then jump to the exact moment in the video.**
 
-Conferences post far more talks than anyone has time to watch. conf-tldr picks the AI talks that matter and summarizes each one.
-
-Each summary has:
-
-- **Key points**, each linked to the exact moment in the video
-- **Numbers** the speakers shared (latency, cost, scale)
-- **Open gaps** and **opportunities** the talk left open
-- Links to the **video**, **slides**, and **open-source projects** discussed
-
-## How to use it
+Conferences post far more talks than anyone has time to watch. conf-tldr picks the AI talks that matter and summarizes each one: key points, the numbers speakers shared, open gaps, and links to slides and open-source projects.
 
 | Way | Best for | How |
 |---|---|---|
@@ -25,7 +16,7 @@ Each summary has:
 
 ### KubeCon + CloudNativeCon North America 2026
 
-#### Inference (20/20 summarized)
+#### Inference
 
 | Talk | Video |
 |---|---|
@@ -50,7 +41,7 @@ Each summary has:
 | [Follow the GPUs: How a Regulated Fortune 100 Serves Customers When No Single Cloud Has Enough](events/kubecon/na-2026/talks/71NwaH0y5OM.md) | [YouTube](https://www.youtube.com/watch?v=71NwaH0y5OM) |
 | [Dropping LLM Inference Cost by Two-Thirds with Open Weights and Kubernetes](events/kubecon/na-2026/talks/_jb3uLrTa3s.md) | [YouTube](https://www.youtube.com/watch?v=_jb3uLrTa3s) |
 
-#### Inference observability and cost (4/4 summarized)
+#### Inference observability and cost
 
 | Talk | Video |
 |---|---|
@@ -59,7 +50,7 @@ Each summary has:
 | [Clueless About The Cost of AI Model Usage? OpenCost+llm-d = first of a kind inference cost tracking](events/kubecon/na-2026/talks/v0qNmkJSJ8A.md) | [YouTube](https://www.youtube.com/watch?v=v0qNmkJSJ8A) |
 | [Who Ran Up the Inference Bill? AI Traffic Control with KServe and Gateway API Inference Extensions](events/kubecon/na-2026/talks/ymgukAwlT8c.md) | [YouTube](https://www.youtube.com/watch?v=ymgukAwlT8c) |
 
-#### Agentic (12/12 summarized)
+#### Agentic
 
 | Talk | Video |
 |---|---|
@@ -72,11 +63,11 @@ Each summary has:
 | [Governing and Scaling Agents in Heterogeneous Environments](events/kubecon/na-2026/talks/wB5-lqrDCbw.md) | [YouTube](https://www.youtube.com/watch?v=wB5-lqrDCbw) |
 | [Agents on the Platform: Four Perspectives on the Conversation We're Already Having in Private](events/kubecon/na-2026/talks/oWFO88oAHOY.md) | [YouTube](https://www.youtube.com/watch?v=oWFO88oAHOY) |
 | [Agents Fail. Workflows Recover. Durable Agent Orchestration with Cadence](events/kubecon/na-2026/talks/n8t6AblQUMY.md) | [YouTube](https://www.youtube.com/watch?v=n8t6AblQUMY) |
-| [Demystifying Upgrades for Stateful, Dormant AI Agents: Unleashing Seamless Updates in Dynamic Sand](events/kubecon/na-2026/talks/eQoE0J6xnkA.md) | [YouTube](https://www.youtube.com/watch?v=eQoE0J6xnkA) |
+| [Demystifying Upgrades for Stateful, Dormant AI Agents: Unleashing Seamless Updates in Dynamic Sandboxes](events/kubecon/na-2026/talks/eQoE0J6xnkA.md) | [YouTube](https://www.youtube.com/watch?v=eQoE0J6xnkA) |
 | [Just Keep Swimming: Benchmarking OSS Agent Memory on Kubernetes with OpenTelemetry](events/kubecon/na-2026/talks/LSFk3nqozcY.md) | [YouTube](https://www.youtube.com/watch?v=LSFk3nqozcY) |
 | [Lessons Learned Sandboxing Agents with kagent](events/kubecon/na-2026/talks/rAyt198OTFA.md) | [YouTube](https://www.youtube.com/watch?v=rAyt198OTFA) |
 
-#### Agent security (5/5 summarized)
+#### Agent security
 
 | Talk | Video |
 |---|---|
@@ -86,7 +77,7 @@ Each summary has:
 | [The Agent Has Entered the Cluster: AI Auth 101 for Kubernetes](events/kubecon/na-2026/talks/08nLTg2YDOI.md) | [YouTube](https://www.youtube.com/watch?v=08nLTg2YDOI) |
 | [Least-Privilege by Default: Standardizing Identity-Aware AI Agent Access into a Golden Path](events/kubecon/na-2026/talks/4T8Sy76WppM.md) | [YouTube](https://www.youtube.com/watch?v=4T8Sy76WppM) |
 
-#### GPUs and scheduling (8/8 summarized)
+#### GPUs and scheduling
 
 | Talk | Video |
 |---|---|
@@ -101,9 +92,24 @@ Each summary has:
 
 <!-- summaries:end -->
 
+## What you get
+
+- **Saves time:** a few minutes of reading instead of a full video
+- **Agent-ready:** your AI agent can search every talk at once
+- **Checkable:** you can verify any point against the source
+
+| Who | Use |
+|---|---|
+| Engineers | See how others solved problems like KV cache routing |
+| Architects | Compare ideas across talks before picking a design |
+| Customer-facing roles | Pull real numbers and examples for calls |
+| Leaders | Spot which ideas keep coming up |
+| Writers & speakers | Find sources for posts, talks and docs |
+| Missed the event | Catch up on just your topics |
+
 ## Ask your AI agent
 
-Every summary is available over MCP through [GitMCP](https://gitmcp.io/avinashdesireddy/conf-tldr). There is nothing to install and no token is needed. Add this to your MCP client's config (Kiro, Claude, Cursor, VS Code and others):
+Every summary is available over MCP through [GitMCP](https://gitmcp.io/avinashdesireddy/conf-tldr). There is nothing to install and no token is needed. [`llms.txt`](llms.txt) lists every summary so agents can find them. Add this to your MCP client's config (Kiro, Claude Code, Cursor, VS Code and others):
 
 ```json
 {
@@ -115,7 +121,7 @@ Every summary is available over MCP through [GitMCP](https://gitmcp.io/avinashde
 }
 ```
 
-For clients that only run local commands, use `"command": "npx", "args": ["mcp-remote", "https://gitmcp.io/avinashdesireddy/conf-tldr"]`.
+For clients that only run local commands (such as Claude Desktop), use `"command": "npx", "args": ["mcp-remote", "https://gitmcp.io/avinashdesireddy/conf-tldr"]`.
 
 Then ask things like:
 
@@ -133,6 +139,10 @@ curl -s https://raw.githubusercontent.com/avinashdesireddy/conf-tldr/main/data/k
 
 ## Contribute
 
-Summaries are AI-assisted. Spot a mistake? [Open an issue](../../issues/new).
+Summaries are AI-assisted. Spot a mistake? [Open an issue](https://github.com/avinashdesireddy/conf-tldr/issues/new).
 
 Want a talk added? Open an issue with the YouTube link. To run the pipeline or add an event, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+Summaries and data: [CC BY 4.0](LICENSE-CONTENT). Code: [Apache 2.0](LICENSE). Videos and slides belong to their speakers and event organizers.
