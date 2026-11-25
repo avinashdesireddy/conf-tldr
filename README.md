@@ -145,4 +145,4 @@ Want a talk added? Open an issue with the YouTube link. To run the pipeline or a
 
 ## License
 
-Summaries and data: [CC BY 4.0](LICENSE-CONTENT). Code: [MIT](LICENSE). Videos and slides belong to their speakers and event organizers.
+Summaries and data: [CC BY 4.0](LICENSE-CONTENT). Code: [Apache 2.0](LICENSE). Videos and slides belong to their speakers and event organizers.
