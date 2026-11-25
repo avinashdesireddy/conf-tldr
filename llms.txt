@@ -1,4 +1,4 @@
-# conf-tldr
+# Talk Radar (conf-tldr)
 
 > Summaries of conference talks. Each has key points with video timestamps, numbers the speakers shared, open gaps, opportunities, and links to slides and open-source projects.
 
