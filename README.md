@@ -1,6 +1,21 @@
 # conf-tldr
 
-Short, timestamp-linked summaries of conference talks. Each one has key points, the numbers speakers gave, open gaps, and opportunities. Every point links to the moment in the video.
+Conferences post far more talks than anyone has time to watch. conf-tldr is a short list of the AI talks worth knowing about, each turned into a summary you can read in a few minutes, or query from your AI agent.
+
+Each summary has:
+
+- **Key points**, each linked to the exact moment in the video
+- **Numbers** the speakers shared (latency, cost, scale)
+- **Open gaps** and **opportunities** the talk left open
+- Links to the **video**, **slides**, and **open-source projects** discussed
+
+## How to use it
+
+| Way | Best for | How |
+|---|---|---|
+| Read | Browsing a topic | Pick a talk from [Summaries](#summaries) below |
+| Ask your agent | Questions across many talks | Connect over MCP, see [Ask your AI agent](#ask-your-ai-agent) |
+| Use the data | Your own tools and analysis | Load the JSON, see [Use the data](#use-the-data) |
 
 ## Summaries
 
@@ -86,7 +101,7 @@ Short, timestamp-linked summaries of conference talks. Each one has key points, 
 
 ## Ask your AI agent
 
-Every summary is available over MCP through [GitMCP](https://gitmcp.io/avinashdesireddy/conf-tldr). There is nothing to install and no token. Add this to your client's MCP config:
+Every summary is available over MCP through [GitMCP](https://gitmcp.io/avinashdesireddy/conf-tldr). There is nothing to install and no token is needed. Add this to your MCP client's config (Kiro, Claude, Cursor, VS Code and others):
 
 ```json
 {
@@ -110,6 +125,12 @@ Then ask things like:
 
 Every talk is also in `data/<series>/<edition>/talks.jsonl`, one JSON object per line. See [`schema/talk.schema.json`](schema/talk.schema.json).
 
+```bash
+curl -s https://raw.githubusercontent.com/avinashdesireddy/conf-tldr/main/data/kubecon/na-2026/talks.jsonl | jq -r '.title'
+```
+
+## Contribute
+
 Summaries are AI-assisted. Spot a mistake? [Open an issue](../../issues/new).
 
-To run the pipeline or add an event, see [CONTRIBUTING.md](CONTRIBUTING.md).
+Want a talk added? Open an issue with the YouTube link. To run the pipeline or add an event, see [CONTRIBUTING.md](CONTRIBUTING.md).
