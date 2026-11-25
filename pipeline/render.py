@@ -111,8 +111,7 @@ def render_readme_block(events: list[tuple[str, dict, list[dict]]]) -> str:
 
         out += [f"### {ev['name']}", ""]
         for topic, ids in topics.items():
-            n = sum(1 for v in ids if v in summaries)
-            out += [f"#### {topic} ({n}/{len(ids)} summarized)", "", "| Talk | Video |", "|---|---|"]
+            out += [f"#### {topic}", "", "| Talk | Video |", "|---|---|"]
             for vid in ids:
                 if vid in summaries:
                     talk = f"[{summaries[vid]['title']}](events/{event}/talks/{vid}.md)"
@@ -121,6 +120,23 @@ def render_readme_block(events: list[tuple[str, dict, list[dict]]]) -> str:
                 out.append(f"| {talk} | [YouTube]({youtube_url(vid)}) |")
             out.append("")
     out.append(END)
+    return "\n".join(out)
+
+
+RAW = "https://raw.githubusercontent.com/avinashdesireddy/conf-tldr/main"
+
+
+def render_llms_txt(events: list[tuple[str, dict, list[dict]]]) -> str:
+    """llms.txt (llmstxt.org): GitMCP reads this first, so it must list every summary by absolute URL."""
+    out = ["# conf-tldr", "",
+           "> Summaries of conference talks. Each has key points with video timestamps, numbers the speakers "
+           "shared, open gaps, opportunities, and links to slides and open-source projects.", "",
+           f"Structured data for every talk: {RAW}/data/<series>/<edition>/talks.jsonl", ""]
+    for event, ev, talks in events:
+        out += [f"## {ev['name']}", ""]
+        for d in sorted(talks, key=lambda d: d["title"]):
+            out.append(f"- [{d['title']}]({RAW}/events/{event}/talks/{d['video_id']}.md): {d['tldr']}")
+        out.append("")
     return "\n".join(out)
 
 
@@ -145,6 +161,8 @@ def main() -> None:
         (event_dir(event) / "talks.jsonl").write_text("".join(json.dumps(d, ensure_ascii=False) + "\n" for d in talks))
         rendered.append((event, ev, talks))
         print(f"{event}: {len(talks)} talks")
+
+    (ROOT / "llms.txt").write_text(render_llms_txt(rendered))
 
     readme = ROOT / "README.md"
     text = readme.read_text()
