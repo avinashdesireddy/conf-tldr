@@ -1,8 +1,10 @@
-# conf-tldr
+# Talk Radar
 
 **Read conference talk summaries or ask your AI agent about them. Then jump to the exact moment in the video.**
 
-Conferences post far more talks than anyone has time to watch. conf-tldr picks the AI talks that matter and summarizes each one: key points, the numbers speakers shared, open gaps, and links to slides and open-source projects.
+*Repo and MCP name: `conf-tldr`*
+
+Conferences post far more talks than anyone has time to watch. Talk Radar picks the AI talks that matter and summarizes each one: key points, the numbers speakers shared, open gaps, and links to slides and open-source projects.
 
 | Way | Best for | How |
 |---|---|---|
