@@ -128,7 +128,7 @@ RAW = "https://raw.githubusercontent.com/avinashdesireddy/conf-tldr/main"
 
 def render_llms_txt(events: list[tuple[str, dict, list[dict]]]) -> str:
     """llms.txt (llmstxt.org): GitMCP reads this first, so it must list every summary by absolute URL."""
-    out = ["# conf-tldr", "",
+    out = ["# Talk Radar (conf-tldr)", "",
            "> Summaries of conference talks. Each has key points with video timestamps, numbers the speakers "
            "shared, open gaps, opportunities, and links to slides and open-source projects.", "",
            f"Structured data for every talk: {RAW}/data/<series>/<edition>/talks.jsonl", ""]
